@@ -1,0 +1,9 @@
+-- AlterTable
+ALTER TABLE "Answer" ALTER COLUMN "order" SET DEFAULT 0,
+ALTER COLUMN "count" SET DEFAULT 0;
+
+-- AlterTable
+ALTER TABLE "Question" ADD COLUMN     "order" INTEGER NOT NULL DEFAULT 0;
+
+-- AlterTable
+ALTER TABLE "TagLink" ALTER COLUMN "count" SET DEFAULT 0;

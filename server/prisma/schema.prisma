@@ -1,0 +1,81 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator nestjsDto {
+  provider = "prisma-generator-nestjs-dto"
+  output   = "../src/modules/generated"
+}
+
+model Project {
+  id        String     @id @default(uuid())
+  title     String
+  questions Question[]
+  published Boolean    @default(false)
+  tagLinks  TagLink[]
+  responses Response[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model Question {
+  id        String   @id @default(uuid())
+  title     String
+  order     Int      @default(0)
+  answers   Answer[]
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Answer {
+  id              String     @id @default(uuid())
+  title           String
+  order           Int        @default(0)
+  questionId      String
+  question        Question   @relation(fields: [questionId], references: [id])
+  firstResponses  Response[] @relation(name: "firstAnswer")
+  secondResponses Response[] @relation(name: "secondAnswer")
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+}
+
+model Response {
+  projectId      String
+  project        Project @relation(fields: [projectId], references: [id])
+  firstAnswerId  String
+  firstAnswer    Answer  @relation(name: "firstAnswer", fields: [firstAnswerId], references: [id])
+  secondAnswerId String
+  secondAnswer   Answer  @relation(name: "secondAnswer", fields: [secondAnswerId], references: [id])
+  count          Int
+
+  @@id([firstAnswerId, secondAnswerId])
+}
+
+model Tag {
+  id        String    @id @default(uuid())
+  title     String
+  tagLinks  TagLink[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model TagLink {
+  id        String   @id @default(uuid())
+  projectId String
+  tagId     String
+  project   Project  @relation(fields: [projectId], references: [id])
+  tag       Tag      @relation(fields: [tagId], references: [id])
+  count     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
