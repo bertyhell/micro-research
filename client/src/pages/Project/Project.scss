@@ -1,0 +1,38 @@
+@use "sass:color";
+@import "../../variables";
+
+.c-answer-list {
+  padding: 0;
+  li {
+    list-style: none;
+    display: block;
+    padding: 2rem;
+    margin: 1rem 0;
+    border: 1px solid $accent;
+    border-radius: 4px;
+
+    &:hover {
+      background-color: rgba($accent, 0.2);
+      cursor: pointer;
+    }
+  }
+}
+
+.c-bar {
+  perspective: 400px;
+
+  .c-front {
+    background-color: #2c7a7b;
+    width: 2rem;
+    height: 6rem;
+    transform: rotateX(0deg) rotateY(-30deg) rotateZ(0deg) translate(0px, 0px);
+  }
+
+  .c-left {
+    background-color: color.adjust($accent, $lightness: 15%);
+    width: 2rem;
+    height: 6rem;
+    transform: rotateX(0deg) rotateY(60deg) rotateZ(0deg) translate(0px, 0px);
+  }
+}
+

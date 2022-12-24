@@ -1,0 +1,15 @@
+@import "../../variables";
+
+.c-error {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 40vh;
+
+  svg {
+    font-size: 4rem;
+    margin-bottom: 2rem;
+    color: $accent;
+  }
+}

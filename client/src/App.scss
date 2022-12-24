@@ -1,0 +1,46 @@
+@use "sass:color";
+@import "./variables";
+
+@import "./components/Button/Button.scss";
+
+* {
+  box-sizing: border-box;
+}
+
+a {
+  font-weight: bold;
+  color: $accent;
+}
+
+.c-app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #ddd;
+  color: #333;
+}
+
+nav {
+  width: 100vw;
+  height: $navHeight;
+  background-color: $accent;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  box-shadow: 0 0 2rem 0 rgba(0, 0, 0, 0.05);
+
+  .c-links {
+    display: flex;
+    flex-direction: row;
+    max-width: 70rem;
+    width: 100%;
+    padding: 1.3rem;
+  }
+}
+
+.c-content {
+  padding: 2rem;
+  min-height: calc(100vh - $navHeight);
+  max-width: 70rem;
+  width: 100%;
+}
