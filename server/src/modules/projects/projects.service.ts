@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { DatabaseService } from '../database/database.service';
+import { Prisma, prisma } from '@prisma/client';
+import { ProjectByTagResponse } from './dto/get-projects-by-title.dto';
 
 @Injectable()
 export class ProjectsService {
@@ -61,5 +63,22 @@ export class ProjectsService {
         responses: true,
       },
     });
+  }
+
+  async getByTag(
+    tag: string,
+    skip: number,
+    take: number,
+  ): Promise<ProjectByTagResponse[]> {
+    return this.databaseService.$queryRaw<ProjectByTagResponse[]>`
+        SELECT "Project"."id", "Project"."title", "TagLink"."count"
+        from "Project"
+                 JOIN "TagLink" ON "Project"."id" = "TagLink"."projectId"
+                 JOIN "Tag" ON "TagLink"."tagId" = "Tag"."id"
+        WHERE lower("Tag"."title") = lower(${tag})
+        ORDER BY "TagLink"."count" DESC
+            LIMIT ${take}
+        OFFSET ${skip}
+    `;
   }
 }

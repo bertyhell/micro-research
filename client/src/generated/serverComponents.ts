@@ -91,6 +91,74 @@ export const useProjectsControllerCreate = (
   );
 };
 
+export type ProjectsControllerGetByTagQueryParams = {
+  tag: string;
+};
+
+export type ProjectsControllerGetByTagError = Fetcher.ErrorWrapper<undefined>;
+
+export type ProjectsControllerGetByTagResponse = Schemas.ProjectByTagResponse[];
+
+export type ProjectsControllerGetByTagVariables = {
+  queryParams: ProjectsControllerGetByTagQueryParams;
+} & ServerContext["fetcherOptions"];
+
+/**
+ * Get project by tag count
+ */
+export const fetchProjectsControllerGetByTag = (
+  variables: ProjectsControllerGetByTagVariables,
+  signal?: AbortSignal
+) =>
+  serverFetch<
+    ProjectsControllerGetByTagResponse,
+    ProjectsControllerGetByTagError,
+    undefined,
+    {},
+    ProjectsControllerGetByTagQueryParams,
+    {}
+  >({ url: "/projects", method: "get", ...variables, signal });
+
+/**
+ * Get project by tag count
+ */
+export const useProjectsControllerGetByTag = <
+  TData = ProjectsControllerGetByTagResponse
+>(
+  variables: ProjectsControllerGetByTagVariables,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      ProjectsControllerGetByTagResponse,
+      ProjectsControllerGetByTagError,
+      TData
+    >,
+    "queryKey" | "queryFn"
+  >
+) => {
+  const { fetcherOptions, queryOptions, queryKeyFn } =
+    useServerContext(options);
+  return reactQuery.useQuery<
+    ProjectsControllerGetByTagResponse,
+    ProjectsControllerGetByTagError,
+    TData
+  >(
+    queryKeyFn({
+      path: "/projects",
+      operationId: "projectsControllerGetByTag",
+      variables,
+    }),
+    ({ signal }) =>
+      fetchProjectsControllerGetByTag(
+        { ...fetcherOptions, ...variables },
+        signal
+      ),
+    {
+      ...options,
+      ...queryOptions,
+    }
+  );
+};
+
 export type ProjectsControllerFindOnePathParams = {
   id: string;
 };
@@ -286,6 +354,11 @@ export type QueryOperation =
       path: "/";
       operationId: "appControllerStatus";
       variables: AppControllerStatusVariables;
+    }
+  | {
+      path: "/projects";
+      operationId: "projectsControllerGetByTag";
+      variables: ProjectsControllerGetByTagVariables;
     }
   | {
       path: "/projects/{id}";

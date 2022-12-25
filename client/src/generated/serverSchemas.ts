@@ -55,6 +55,12 @@ export type ProjectDetailResponse = {
   responses: ResponseResponse[];
 };
 
+export type ProjectByTagResponse = {
+  id: string;
+  title: string;
+  count: number;
+};
+
 export type AnswerResponse = {
   id: string;
   title: string;
