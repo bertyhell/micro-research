@@ -32,7 +32,7 @@ model Question {
   order     Int      @default(0)
   answers   Answer[]
   projectId String
-  project   Project  @relation(fields: [projectId], references: [id])
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -42,7 +42,7 @@ model Answer {
   title           String
   order           Int        @default(0)
   questionId      String
-  question        Question   @relation(fields: [questionId], references: [id])
+  question        Question   @relation(fields: [questionId], references: [id], onDelete: Cascade)
   firstResponses  Response[] @relation(name: "firstAnswer")
   secondResponses Response[] @relation(name: "secondAnswer")
   createdAt       DateTime   @default(now())
@@ -51,11 +51,11 @@ model Answer {
 
 model Response {
   projectId      String
-  project        Project @relation(fields: [projectId], references: [id])
+  project        Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
   firstAnswerId  String
-  firstAnswer    Answer  @relation(name: "firstAnswer", fields: [firstAnswerId], references: [id])
+  firstAnswer    Answer  @relation(name: "firstAnswer", fields: [firstAnswerId], references: [id], onDelete: Cascade)
   secondAnswerId String
-  secondAnswer   Answer  @relation(name: "secondAnswer", fields: [secondAnswerId], references: [id])
+  secondAnswer   Answer  @relation(name: "secondAnswer", fields: [secondAnswerId], references: [id], onDelete: Cascade)
   count          Int
 
   @@id([firstAnswerId, secondAnswerId])
@@ -73,8 +73,8 @@ model TagLink {
   id        String   @id @default(uuid())
   projectId String
   tagId     String
-  project   Project  @relation(fields: [projectId], references: [id])
-  tag       Tag      @relation(fields: [tagId], references: [id])
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  tag       Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
   count     Int      @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

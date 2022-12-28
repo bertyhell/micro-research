@@ -3,21 +3,14 @@
  *
  * @version 0.0.1
  */
-export type CreateAnswerDto = {
-  title: string;
-  order: number;
-};
-
 export type CreateQuestionDto = {
   title: string;
-  answer: CreateAnswerDto[];
+  answers: string[];
 };
 
 export type CreateProjectDto = {
   title: string;
   questions: CreateQuestionDto[];
-  published: boolean;
-  tagIds: string[];
 };
 
 export type AnswerDetailResponse = {

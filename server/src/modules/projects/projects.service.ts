@@ -1,47 +1,59 @@
 import { Injectable } from '@nestjs/common';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { DatabaseService } from '../database/database.service';
-import { Prisma, prisma } from '@prisma/client';
 import { ProjectByTagResponse } from './dto/get-projects-by-title.dto';
 
 @Injectable()
 export class ProjectsService {
   constructor(private databaseService: DatabaseService) {}
 
-  create(createProjectDto: CreateProjectDto) {
-    this.databaseService.project.create({
-      include: {
-        questions: {
-          include: {
-            answers: true,
+  async create(createProjectDto: CreateProjectDto) {
+    const projectId: string = await this.databaseService.$transaction(
+      async (prisma) => {
+        const project = await prisma.project.create({
+          data: {
+            title: createProjectDto.title,
           },
-        },
-        tagLinks: true,
+        });
+        await Promise.all([
+          prisma.question.create({
+            data: {
+              title: createProjectDto.questions[0].title,
+              projectId: project.id,
+              answers: {
+                createMany: {
+                  data: createProjectDto.questions[0].answers.map(
+                    (answer, index) => ({
+                      title: answer,
+                      order: index,
+                    }),
+                  ),
+                },
+              },
+            },
+          }),
+          prisma.question.create({
+            data: {
+              title: createProjectDto.questions[1].title,
+              projectId: project.id,
+              answers: {
+                createMany: {
+                  data: createProjectDto.questions[1].answers.map(
+                    (answer, index) => ({
+                      title: answer,
+                      order: index,
+                    }),
+                  ),
+                },
+              },
+            },
+          }),
+        ]);
+
+        return project.id;
       },
-      data: {
-        title: createProjectDto.title,
-        questions: {
-          createMany: {
-            data: createProjectDto.questions.map((question) => {
-              return {
-                title: question.title,
-              };
-            }),
-            skipDuplicates: true,
-          },
-        },
-        tagLinks: {
-          createMany: {
-            data: createProjectDto.tagIds.map((tagId) => {
-              return {
-                tagId: tagId,
-                count: 0,
-              };
-            }),
-          },
-        },
-      },
-    });
+    );
+    return this.findOne(projectId);
   }
 
   findOne(id: string) {

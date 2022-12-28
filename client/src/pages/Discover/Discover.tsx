@@ -8,6 +8,7 @@ import Spinner from "../../components/Spinner/Spinner";
 import { UseQueryResult } from "@tanstack/react-query";
 
 import "./Discover.scss";
+import { Link } from "react-router-dom";
 
 function Discover() {
   const interestingProjects = useProjectsControllerGetByTag({
@@ -45,10 +46,14 @@ function Discover() {
     }
     return projects.data?.map((project) => {
       return (
-        <div key={tagTitle + " " + project.id} className="c-project-tag">
-          <span>{project.title}</span>
+        <Link
+          key={tagTitle + " " + project.id}
+          className="c-project-tag"
+          to={"/projects/" + project.id}
+        >
           <span>{project.count}</span>
-        </div>
+          <span>{project.title}</span>
+        </Link>
       );
     });
   };

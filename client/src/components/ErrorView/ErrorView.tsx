@@ -15,7 +15,6 @@ interface ErrorViewProps {
 }
 
 const ErrorView: FC<ErrorViewProps> = ({ message, icon }) => {
-
   const type = message ? "CUSTOM_MESSAGE" : "NOT_FOUND";
 
   const getIcon = () => {
@@ -40,7 +39,7 @@ const ErrorView: FC<ErrorViewProps> = ({ message, icon }) => {
         return (
           <>
             This page was not found. Check the url and if the issue persists,{" "}
-            <a href="https://github.com/bertyhell/micro-research/issues">
+            <a href="https://github.com/bertyhell/micro-research/issues/new">
               create an issue here.
             </a>
           </>
@@ -50,7 +49,7 @@ const ErrorView: FC<ErrorViewProps> = ({ message, icon }) => {
         return (
           <>
             Something went wrong, if this keeps happening{" "}
-            <a href="https://github.com/bertyhell/micro-research/issues">
+            <a href="https://github.com/bertyhell/micro-research/issues/new">
               create an issue here.
             </a>
           </>

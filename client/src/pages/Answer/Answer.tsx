@@ -9,14 +9,16 @@ import {
   AnswerResponse,
   QuestionResponse,
 } from "../../generated/serverSchemas";
-import { redirect } from "react-router-dom";
 import { faBed } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router";
 
 import "./Answer.scss";
 
 const MICRO_RESEARCH_ANSWERED_IDS = "MICRO_RESEARCH_ANSWERED_IDS";
 
 function Answer() {
+  const navigate = useNavigate();
+
   const getAnsweredIds = () => {
     return (localStorage.getItem(MICRO_RESEARCH_ANSWERED_IDS) || "")
       .split(",")
@@ -28,7 +30,7 @@ function Answer() {
         answeredIds: getAnsweredIds(),
       },
     },
-    { retry: 0,  }
+    { retry: 0 }
   );
   const { mutateAsync: submitAnswers } =
     useAnswerControllerSubmitAnswerToProject();
@@ -53,7 +55,7 @@ function Answer() {
       (id) => !!id
     );
     localStorage.setItem(MICRO_RESEARCH_ANSWERED_IDS, answeredIds.join(","));
-    redirect("/projects/" + unansweredProject.data?.id);
+    navigate("/projects/" + unansweredProject.data?.id);
   };
 
   const handleAnswer = async (answerOption: AnswerResponse) => {
@@ -74,6 +76,7 @@ function Answer() {
           {question.answers.map((answerOption) => {
             return (
               <li
+                className="c-answer-list__answer-option"
                 key={answerOption.id}
                 onClick={() => handleAnswer(answerOption)}
               >
@@ -90,7 +93,11 @@ function Answer() {
     return <Spinner />;
   }
   if (unansweredProject.error || !unansweredProject.data) {
-    if (JSON.stringify(unansweredProject.error?.payload).includes("NO_MORE_UNANSWERED_QUESTIONS")) {
+    if (
+      JSON.stringify(unansweredProject.error?.payload).includes(
+        "NO_MORE_UNANSWERED_QUESTIONS"
+      )
+    ) {
       return (
         <ErrorPage
           message="There are no more unanswered questions for you to answer. Good job, time to take a nap."

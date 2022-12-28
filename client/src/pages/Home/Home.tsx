@@ -1,5 +1,7 @@
 import React from "react";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
+
+import "./Home.scss";
 
 function Home() {
   return (
@@ -15,6 +17,10 @@ function Home() {
         </a>
         )?.
       </p>
+
+      <Link className="c-button c-button--large" to="/answer">
+        ANSWER SOME QUESTIONS
+      </Link>
 
       <p>
         Examples can be:
@@ -76,7 +82,6 @@ function Home() {
             </ul>
           </li>
         </ul>
-        <Link className="c-button" to="/answer">ANSWER SOME QUESTIONS</Link>
       </p>
     </div>
   );

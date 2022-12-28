@@ -2,25 +2,30 @@
 @import "../../variables";
 
 .c-button {
-	margin-right: 1rem;
-	padding: 0.5rem 1rem;
-	display: inline-block;
-	border: 1px solid color.adjust($accent, $lightness: 5%);
-	background-color: color.adjust($accent, $lightness: 2%);
-	border-radius: 6px;
-	color: white;
-	font-size: 0.8rem;
-	text-decoration: none;
+  margin-right: 1rem;
+  padding: 0.5rem 1rem;
+  display: inline-block;
+  border: 1px solid color.adjust($accent, $lightness: 5%);
+  background-color: color.adjust($accent, $lightness: 2%);
+  border-radius: 6px;
+  color: white;
+  font-size: 0.8rem;
+  text-decoration: none;
+  transition: background 600ms;
 
-	&:hover {
-		background-color: color.adjust($accent, $lightness: 10%);
-	}
+  &:hover {
+    background-color: color.adjust($accent, $lightness: 10%);
+  }
 
-	&.c-link-active {
-		background-color: color.adjust($accent, $lightness: 10%);
-	}
+  &.c-link-active {
+    background-color: color.adjust($accent, $lightness: 10%);
+  }
 
-	svg {
-		margin-right: 0.3rem;
-	}
+  svg {
+    margin-right: 0.3rem;
+  }
+
+  &.c-button--large {
+    padding: 1rem 2rem;
+  }
 }
