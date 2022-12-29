@@ -1,12 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class ProjectRankedResponse {
+export class TagResponse {
   @ApiProperty()
   id: string;
 
   @ApiProperty()
   title: string;
-
-  @ApiProperty()
-  count: number;
 }

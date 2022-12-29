@@ -2,15 +2,56 @@
 @import "../../variables";
 
 .c-create-page {
-  max-width: 43rem;
+  max-width: 30rem;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 20rem);
+
+  > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.c-steps {
+  display: flex;
+  flex-direction: row;
+  opacity: 0.5;
+  margin: 0 auto 3rem auto;
+
+  li {
+    line-height: 1.6rem;
+    list-style: none;
+    padding: 0 0.5rem;
+    font-size: 11px;
+    cursor: pointer;
+
+    &.c-step--active {
+      border: 5px solid $accent;
+      border-width: 0 0 5px 0;
+    }
+  }
 }
 
 .c-form-field {
   margin-bottom: 1rem;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 
   label {
     font-size: 14px;
+  }
+
+  p {
+    font-size: 14px;
+    color: #666;
+    text-align: center;
   }
 
   &.c-form-field__project-title {
@@ -34,6 +75,7 @@
     outline: none;
     color: black;
     font-size: 14px;
+    text-align: center;
 
     &:focus {
       border-style: dashed;
@@ -99,6 +141,8 @@
 }
 
 .c-button {
+  margin-right: 0;
+
   &:focus {
     outline: none;
     border-style: dashed;
@@ -107,7 +151,13 @@
 }
 
 .c-button__add-answer {
-  margin-bottom: 2rem;
+  margin: 0 auto 2rem auto;
+  background-color: #ddd;
+  color: $accent;
+
+  &:focus {
+    color: white;
+  }
 }
 
 .c-columns {

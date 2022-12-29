@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { DatabaseService } from '../database/database.service';
-import { ProjectByTagResponse } from './dto/get-projects-by-title.dto';
+import { ProjectRankedResponse } from './dto/get-projects-by-title.dto';
 
 @Injectable()
 export class ProjectsService {
@@ -81,8 +81,8 @@ export class ProjectsService {
     tag: string,
     skip: number,
     take: number,
-  ): Promise<ProjectByTagResponse[]> {
-    return this.databaseService.$queryRaw<ProjectByTagResponse[]>`
+  ): Promise<ProjectRankedResponse[]> {
+    return this.databaseService.$queryRaw<ProjectRankedResponse[]>`
         SELECT "Project"."id", "Project"."title", "TagLink"."count"
         from "Project"
                  JOIN "TagLink" ON "Project"."id" = "TagLink"."projectId"
@@ -92,5 +92,49 @@ export class ProjectsService {
             LIMIT ${take}
         OFFSET ${skip}
     `;
+  }
+
+  async getByAnswerCount(
+    skip: number,
+    take: number,
+  ): Promise<ProjectRankedResponse[]> {
+    return this.databaseService.$queryRaw<ProjectRankedResponse[]>`
+        SELECT "Project"."id", "Project"."title", SUM("Response"."count") as "count"
+        from "Project"
+                 JOIN "Response" ON "Project"."id" = "Response"."projectId"
+        GROUP BY "Project"."id", "Project"."title"
+        ORDER BY SUM("Response"."count") DESC
+            LIMIT ${take}
+        OFFSET ${skip}
+    `;
+  }
+
+  async incrementTagLink(projectId: string, tagId: string): Promise<number> {
+    const tagLink = await this.databaseService.tagLink.findFirst({
+      where: {
+        projectId,
+        tagId,
+      },
+    });
+    if (tagLink) {
+      // increment
+      const response = await this.databaseService.tagLink.update({
+        data: {
+          count: tagLink.count + 1,
+        },
+        where: { id: tagLink.id },
+      });
+      return response.count;
+    } else {
+      // create and set to 1
+      const response = await this.databaseService.tagLink.create({
+        data: {
+          projectId,
+          tagId,
+          count: 1,
+        },
+      });
+      return response.count;
+    }
   }
 }

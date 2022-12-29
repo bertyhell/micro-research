@@ -91,16 +91,17 @@ export const useProjectsControllerCreate = (
   );
 };
 
-export type ProjectsControllerGetByTagQueryParams = {
+export type ProjectsControllerGetByTagPathParams = {
   tag: string;
 };
 
 export type ProjectsControllerGetByTagError = Fetcher.ErrorWrapper<undefined>;
 
-export type ProjectsControllerGetByTagResponse = Schemas.ProjectByTagResponse[];
+export type ProjectsControllerGetByTagResponse =
+  Schemas.ProjectRankedResponse[];
 
 export type ProjectsControllerGetByTagVariables = {
-  queryParams: ProjectsControllerGetByTagQueryParams;
+  pathParams: ProjectsControllerGetByTagPathParams;
 } & ServerContext["fetcherOptions"];
 
 /**
@@ -115,9 +116,9 @@ export const fetchProjectsControllerGetByTag = (
     ProjectsControllerGetByTagError,
     undefined,
     {},
-    ProjectsControllerGetByTagQueryParams,
-    {}
-  >({ url: "/projects", method: "get", ...variables, signal });
+    {},
+    ProjectsControllerGetByTagPathParams
+  >({ url: "/projects/tags/{tag}", method: "get", ...variables, signal });
 
 /**
  * Get project by tag count
@@ -143,12 +144,141 @@ export const useProjectsControllerGetByTag = <
     TData
   >(
     queryKeyFn({
-      path: "/projects",
+      path: "/projects/tags/{tag}",
       operationId: "projectsControllerGetByTag",
       variables,
     }),
     ({ signal }) =>
       fetchProjectsControllerGetByTag(
+        { ...fetcherOptions, ...variables },
+        signal
+      ),
+    {
+      ...options,
+      ...queryOptions,
+    }
+  );
+};
+
+export type ProjectsControllerIncrementTagCountPathParams = {
+  projectId: string;
+  tagId: string;
+};
+
+export type ProjectsControllerIncrementTagCountError =
+  Fetcher.ErrorWrapper<undefined>;
+
+export type ProjectsControllerIncrementTagCountResponse =
+  Schemas.ProjectRankedResponse[];
+
+export type ProjectsControllerIncrementTagCountVariables = {
+  pathParams: ProjectsControllerIncrementTagCountPathParams;
+} & ServerContext["fetcherOptions"];
+
+/**
+ * Increment tag count by 1 for project
+ */
+export const fetchProjectsControllerIncrementTagCount = (
+  variables: ProjectsControllerIncrementTagCountVariables,
+  signal?: AbortSignal
+) =>
+  serverFetch<
+    ProjectsControllerIncrementTagCountResponse,
+    ProjectsControllerIncrementTagCountError,
+    undefined,
+    {},
+    {},
+    ProjectsControllerIncrementTagCountPathParams
+  >({
+    url: "/projects/{projectId}/tags/{tagId}",
+    method: "patch",
+    ...variables,
+    signal,
+  });
+
+/**
+ * Increment tag count by 1 for project
+ */
+export const useProjectsControllerIncrementTagCount = (
+  options?: Omit<
+    reactQuery.UseMutationOptions<
+      ProjectsControllerIncrementTagCountResponse,
+      ProjectsControllerIncrementTagCountError,
+      ProjectsControllerIncrementTagCountVariables
+    >,
+    "mutationFn"
+  >
+) => {
+  const { fetcherOptions } = useServerContext();
+  return reactQuery.useMutation<
+    ProjectsControllerIncrementTagCountResponse,
+    ProjectsControllerIncrementTagCountError,
+    ProjectsControllerIncrementTagCountVariables
+  >(
+    (variables: ProjectsControllerIncrementTagCountVariables) =>
+      fetchProjectsControllerIncrementTagCount({
+        ...fetcherOptions,
+        ...variables,
+      }),
+    options
+  );
+};
+
+export type ProjectsControllerGetByAnswerCountError =
+  Fetcher.ErrorWrapper<undefined>;
+
+export type ProjectsControllerGetByAnswerCountResponse =
+  Schemas.ProjectRankedResponse[];
+
+export type ProjectsControllerGetByAnswerCountVariables =
+  ServerContext["fetcherOptions"];
+
+/**
+ * Get project by tag count
+ */
+export const fetchProjectsControllerGetByAnswerCount = (
+  variables: ProjectsControllerGetByAnswerCountVariables,
+  signal?: AbortSignal
+) =>
+  serverFetch<
+    ProjectsControllerGetByAnswerCountResponse,
+    ProjectsControllerGetByAnswerCountError,
+    undefined,
+    {},
+    {},
+    {}
+  >({ url: "/projects/answers", method: "get", ...variables, signal });
+
+/**
+ * Get project by tag count
+ */
+export const useProjectsControllerGetByAnswerCount = <
+  TData = ProjectsControllerGetByAnswerCountResponse
+>(
+  variables: ProjectsControllerGetByAnswerCountVariables,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      ProjectsControllerGetByAnswerCountResponse,
+      ProjectsControllerGetByAnswerCountError,
+      TData
+    >,
+    "queryKey" | "queryFn"
+  >
+) => {
+  const { fetcherOptions, queryOptions, queryKeyFn } =
+    useServerContext(options);
+  return reactQuery.useQuery<
+    ProjectsControllerGetByAnswerCountResponse,
+    ProjectsControllerGetByAnswerCountError,
+    TData
+  >(
+    queryKeyFn({
+      path: "/projects/answers",
+      operationId: "projectsControllerGetByAnswerCount",
+      variables,
+    }),
+    ({ signal }) =>
+      fetchProjectsControllerGetByAnswerCount(
         { ...fetcherOptions, ...variables },
         signal
       ),
@@ -349,6 +479,63 @@ export const useAnswerControllerSubmitAnswerToProject = (
   );
 };
 
+export type TagsControllerFindAllError = Fetcher.ErrorWrapper<undefined>;
+
+export type TagsControllerFindAllResponse = Schemas.TagResponse[];
+
+export type TagsControllerFindAllVariables = ServerContext["fetcherOptions"];
+
+/**
+ * Get all tags
+ */
+export const fetchTagsControllerFindAll = (
+  variables: TagsControllerFindAllVariables,
+  signal?: AbortSignal
+) =>
+  serverFetch<
+    TagsControllerFindAllResponse,
+    TagsControllerFindAllError,
+    undefined,
+    {},
+    {},
+    {}
+  >({ url: "/tags", method: "get", ...variables, signal });
+
+/**
+ * Get all tags
+ */
+export const useTagsControllerFindAll = <TData = TagsControllerFindAllResponse>(
+  variables: TagsControllerFindAllVariables,
+  options?: Omit<
+    reactQuery.UseQueryOptions<
+      TagsControllerFindAllResponse,
+      TagsControllerFindAllError,
+      TData
+    >,
+    "queryKey" | "queryFn"
+  >
+) => {
+  const { fetcherOptions, queryOptions, queryKeyFn } =
+    useServerContext(options);
+  return reactQuery.useQuery<
+    TagsControllerFindAllResponse,
+    TagsControllerFindAllError,
+    TData
+  >(
+    queryKeyFn({
+      path: "/tags",
+      operationId: "tagsControllerFindAll",
+      variables,
+    }),
+    ({ signal }) =>
+      fetchTagsControllerFindAll({ ...fetcherOptions, ...variables }, signal),
+    {
+      ...options,
+      ...queryOptions,
+    }
+  );
+};
+
 export type QueryOperation =
   | {
       path: "/";
@@ -356,9 +543,14 @@ export type QueryOperation =
       variables: AppControllerStatusVariables;
     }
   | {
-      path: "/projects";
+      path: "/projects/tags/{tag}";
       operationId: "projectsControllerGetByTag";
       variables: ProjectsControllerGetByTagVariables;
+    }
+  | {
+      path: "/projects/answers";
+      operationId: "projectsControllerGetByAnswerCount";
+      variables: ProjectsControllerGetByAnswerCountVariables;
     }
   | {
       path: "/projects/{id}";
@@ -369,4 +561,9 @@ export type QueryOperation =
       path: "/answer";
       operationId: "answerControllerFindUnanswered";
       variables: AnswerControllerFindUnansweredVariables;
+    }
+  | {
+      path: "/tags";
+      operationId: "tagsControllerFindAll";
+      variables: TagsControllerFindAllVariables;
     };

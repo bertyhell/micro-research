@@ -1,15 +1,26 @@
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faInfoCircle, faTrash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faInfoCircle,
+  faPlus,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 import { useProjectsControllerCreate } from "../../generated/serverComponents";
 import { useNavigate } from "react-router";
 
 import "./Create.scss";
 
+enum Step {
+  ProjectTitle = "ProjectTitle",
+  FirstQuestion = "FirstQuestion",
+  SecondQuestion = "SecondQuestion",
+}
+
 function Create() {
   const navigate = useNavigate();
   const { mutateAsync: createProject } = useProjectsControllerCreate();
 
+  const [step, setStep] = useState<Step>(Step.ProjectTitle);
   const [projectTitle, setProjectTitle] = useState<string>("");
   const [projectTitleError, setProjectTitleError] = useState<string | null>(
     null
@@ -68,11 +79,23 @@ function Create() {
       : "At least 2 answers are needed";
     setSecondQuestionAnswersError(tempSecondQuestionAnswersError);
 
+    if (tempProjectTitleError) {
+      setStep(Step.ProjectTitle);
+    }
+
+    if (tempFirstQuestionTitleError || tempFirstQuestionAnswersError) {
+      setStep(Step.FirstQuestion);
+    }
+
+    if (tempSecondQuestionTitleError || tempSecondQuestionAnswersError) {
+      setStep(Step.SecondQuestion);
+    }
+
     return (
       !tempProjectTitleError &&
       !tempFirstQuestionTitleError &&
-      !tempSecondQuestionTitleError &&
       !tempFirstQuestionAnswersError &&
+      !tempSecondQuestionTitleError &&
       !tempSecondQuestionAnswersError
     );
   };
@@ -164,16 +187,17 @@ function Create() {
                 return [...lastAnswers, ""];
               })
             }
+            aria-label="ADD ANSWER"
           >
-            ADD ANSWER
+            <FontAwesomeIcon icon={faPlus} /> ADD ANSWER
           </button>
         )}
       </>
     );
   };
 
-  return (
-    <div className="c-create-page">
+  const renderProjectTitleStep = () => {
+    return (
       <div
         className={
           "c-form-field c-form-field__project-title" +
@@ -181,70 +205,119 @@ function Create() {
         }
         title={projectTitleError || undefined}
       >
-        <label>
-          Title of the research project{" "}
-          <FontAwesomeIcon
-            icon={faInfoCircle}
-            title="will not be shown to person answering
-          the questions"
-            style={{ opacity: 0.3 }}
-          />
-        </label>
+        <label>Title of the research project</label>
+        <p>
+          This will only be show on the results page. It describes what
+          you&apos;re trying to investigate.
+        </p>
         <input
           type="text"
           value={projectTitle}
           onChange={(evt) => setProjectTitle(evt.target.value)}
         />
       </div>
-      <div className="c-columns">
-        <div>
-          <div
-            className={
-              "c-form-field c-form-field__question-title" +
-              (firstQuestionTitleError ? " c-form-field--error" : "")
-            }
-            title={firstQuestionTitleError || undefined}
-          >
-            <label>First question</label>
-            <input
-              type="text"
-              value={firstQuestionTitle}
-              onChange={(evt) => setFirstQuestionTitle(evt.target.value)}
-            />
-          </div>
-          {renderAnswers(
-            firstQuestionAnswers,
-            setFirstQuestionAnswers,
-            firstQuestionAnswersError
-          )}
+    );
+  };
+
+  const renderQuestionStep = (
+    label: string,
+    title: string,
+    setTitle: React.Dispatch<React.SetStateAction<string>>,
+    titleError: string | null,
+    answers: string[],
+    setAnswers: React.Dispatch<React.SetStateAction<string[]>>,
+    answersError: string | null
+  ) => {
+    return (
+      <div>
+        <div
+          className={
+            "c-form-field c-form-field__question-title" +
+            (titleError ? " c-form-field--error" : "")
+          }
+          title={titleError || undefined}
+        >
+          <label>{label}</label>
+          <input
+            type="text"
+            value={title}
+            onChange={(evt) => setTitle(evt.target.value)}
+          />
         </div>
-        <div>
-          <div
-            className={
-              "c-form-field c-form-field__question-title" +
-              (secondQuestionTitleError ? " c-form-field--error" : "")
-            }
-            title={secondQuestionTitleError || undefined}
-          >
-            <label>Second question</label>
-            <input
-              type="text"
-              value={secondQuestionTitle}
-              onChange={(evt) => setSecondQuestionTitle(evt.target.value)}
-            />
-          </div>
-          {renderAnswers(
-            secondQuestionAnswers,
-            setSecondQuestionAnswers,
-            secondQuestionAnswersError
-          )}
-        </div>
+        {renderAnswers(answers, setAnswers, answersError)}
       </div>
+    );
+  };
+
+  const renderStep = () => {
+    switch (step) {
+      case Step.ProjectTitle:
+        return renderProjectTitleStep();
+      case Step.FirstQuestion:
+        return renderQuestionStep(
+          "First question title",
+          firstQuestionTitle,
+          setFirstQuestionTitle,
+          firstQuestionTitleError,
+          firstQuestionAnswers,
+          setFirstQuestionAnswers,
+          firstQuestionAnswersError
+        );
+      case Step.SecondQuestion:
+        return renderQuestionStep(
+          "Second question title",
+          secondQuestionTitle,
+          setSecondQuestionTitle,
+          secondQuestionTitleError,
+          secondQuestionAnswers,
+          setSecondQuestionAnswers,
+          secondQuestionAnswersError
+        );
+    }
+  };
+
+  const nextStepOrSubmit = async () => {
+    switch (step) {
+      case Step.ProjectTitle:
+        setStep(Step.FirstQuestion);
+        return;
+      case Step.FirstQuestion:
+        setStep(Step.SecondQuestion);
+        return;
+      case Step.SecondQuestion:
+        await submitForm();
+        return;
+    }
+  };
+
+  return (
+    <div className="c-create-page">
+      <ul className="c-steps">
+        <li
+          className={step === Step.ProjectTitle ? "c-step--active" : ""}
+          onClick={() => setStep(Step.ProjectTitle)}
+        >
+          PROJECT
+        </li>
+        <li
+          className={step === Step.FirstQuestion ? "c-step--active" : ""}
+          onClick={() => setStep(Step.FirstQuestion)}
+        >
+          FIRST QUESTION
+        </li>
+        <li
+          className={step === Step.SecondQuestion ? "c-step--active" : ""}
+          onClick={() => setStep(Step.SecondQuestion)}
+        >
+          SECOND QUESTION
+        </li>
+      </ul>
+      {renderStep()}
       <button
         className="c-button c-button--large c-button__create-project"
-        onClick={submitForm}
+        onClick={nextStepOrSubmit}
       >
-        CREATE RESEARCH PROJECT
+        {step === Step.SecondQuestion ? "CREATE RESEARCH PROJECT" : "NEXT"}
       </button>
     </div>
   );

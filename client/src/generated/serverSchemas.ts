@@ -26,6 +26,7 @@ export type QuestionDetailResponse = {
 };
 
 export type TagResponse = {
+  id: string;
   title: string;
 };
 
@@ -48,7 +49,7 @@ export type ProjectDetailResponse = {
   responses: ResponseResponse[];
 };
 
-export type ProjectByTagResponse = {
+export type ProjectRankedResponse = {
   id: string;
   title: string;
   count: number;

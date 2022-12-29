@@ -1,5 +1,9 @@
 import React from "react";
-import { useProjectsControllerFindOne } from "../../generated/serverComponents";
+import {
+  useProjectsControllerFindOne,
+  useProjectsControllerIncrementTagCount,
+  useTagsControllerFindAll,
+} from "../../generated/serverComponents";
 import Spinner from "../../components/Spinner/Spinner";
 import ErrorPage from "../../components/ErrorView/ErrorView";
 import {
@@ -7,11 +11,9 @@ import {
   ResponseResponse,
 } from "../../generated/serverSchemas";
 import { useParams } from "react-router-dom";
-
-import Chart from "chart.js/auto";
+import BarChart, { BarChartProps } from "../../components/BarChart/BarChart";
 
 import "./Project.scss";
-import BarChart, { BarChartProps } from "../../components/BarChart/BarChart";
 
 function Project() {
   const params = useParams<{ id: string }>();
@@ -23,6 +25,9 @@ function Project() {
     },
     { enabled: !!params.id }
   );
+  const tagsRequest = useTagsControllerFindAll({});
+  const { mutateAsync: incrementTagCounter } =
+    useProjectsControllerIncrementTagCount({});
 
   const getCount = (
     responses: ResponseResponse[],
@@ -55,16 +60,60 @@ function Project() {
     };
   };
 
+  const incrementTag = async (tagId: string) => {
+    if (!projectRequest.data?.id) {
+      console.error("project id could not be found", projectRequest);
+      return;
+    }
+    await incrementTagCounter({
+      pathParams: {
+        projectId: projectRequest.data?.id,
+        tagId,
+      },
+    });
+    await projectRequest.refetch();
+  };
+
+  const renderTags = () => {
+    if (
+      !tagsRequest.isLoading &&
+      !tagsRequest.error &&
+      tagsRequest.data?.length
+    ) {
+      const tagsWithCounts = tagsRequest.data
+        .map((tag) => {
+          const tagLink = projectRequest.data?.tagLinks.find(
+            (link) => link.tag.id === tag.id
+          );
+          return { title: tag.title, id: tag.id, count: tagLink?.count || 0 };
+        })
+        .sort((a, b) => (a.count > b.count ? -1 : a.count === b.count ? 0 : 1));
+      return tagsWithCounts.map((tagInfo) => {
+        return (
+          <span
+            className={"c-tag" + (tagInfo.count ? " c-tag--active" : "")}
+            key={tagInfo.id}
+            onClick={() => incrementTag(tagInfo.id)}
+          >
+            <span>{tagInfo.title}</span>
+            <span>{tagInfo.count}</span>
+          </span>
+        );
+      });
+    }
+  };
+
   const renderProject = (project: ProjectDetailResponse) => {
     return (
-      <>
+      <div className="c-project-page">
         <h1>{project.title}</h1>
+        <div className="c-tags">{renderTags()}</div>
         <div className="c-columns">
           <h2>{project.questions[0].title}</h2>
           <h2>{project.questions[1].title}</h2>
         </div>
         <BarChart {...getChartData(project)} />
-      </>
+      </div>
     );
   };
 

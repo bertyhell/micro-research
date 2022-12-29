@@ -8,12 +8,13 @@ import {
   ParseIntPipe,
   BadRequestException,
   DefaultValuePipe,
+  Patch,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ProjectsService } from './projects.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { ProjectDetailResponse } from './dto/get-project.dto';
-import { ProjectByTagResponse } from './dto/get-projects-by-title.dto';
+import { ProjectRankedResponse } from './dto/get-projects-by-title.dto';
 
 @ApiTags('projects')
 @Controller('projects')
@@ -37,21 +38,56 @@ export class ProjectsController {
   @ApiResponse({
     status: 200,
     description: 'List of projects by tags count, paginated',
-    type: ProjectByTagResponse,
+    type: ProjectRankedResponse,
     isArray: true,
   })
-  @Get('')
+  @Get('tags/:tag')
   getByTag(
-    @Query('tag') tag: string,
+    @Param('tag') tag: string,
     @Query('skip', new DefaultValuePipe(0), ParseIntPipe) skip,
     @Query('take', new DefaultValuePipe(5), ParseIntPipe) take,
-  ): Promise<ProjectByTagResponse[]> {
+  ): Promise<ProjectRankedResponse[]> {
     if (!tag) {
       throw new BadRequestException(
-        'You must provide a project tag query param. eg: /projects?tag=interesting',
+        'You must provide a project tag query param. eg: /projects/tags/interesting',
       );
     }
     return this.projectsService.getByTag(tag, skip, take);
+  }
+
+  @ApiOperation({ description: 'Increment tag count by 1 for project' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of projects by tags count, paginated',
+    type: ProjectRankedResponse,
+    isArray: true,
+  })
+  @Patch('/:projectId/tags/:tagId')
+  incrementTagCount(
+    @Param('projectId') projectId: string,
+    @Param('tagId') tagId: string,
+  ): Promise<number> {
+    if (!projectId || !tagId) {
+      throw new BadRequestException(
+        'You must provide a valid project and tag id in the url. eg: /projects/efa89dc5-398f-492b-ac18-d3cd4768cc6a/tags/89ab4bdd-e5b2-4786-ab42-4ea9944439ba',
+      );
+    }
+    return this.projectsService.incrementTagLink(projectId, tagId);
+  }
+
+  @ApiOperation({ description: 'Get project by tag count' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of projects by answer count, paginated',
+    type: ProjectRankedResponse,
+    isArray: true,
+  })
+  @Get('answers')
+  getByAnswerCount(
+    @Query('skip', new DefaultValuePipe(0), ParseIntPipe) skip,
+    @Query('take', new DefaultValuePipe(5), ParseIntPipe) take,
+  ): Promise<ProjectRankedResponse[]> {
+    return this.projectsService.getByAnswerCount(skip, take);
   }
 
   @ApiOperation({ description: 'Get one project by id' })
