@@ -6,6 +6,9 @@ h2 {
 }
 
 .c-project-tag {
+  display: block;
+  margin-bottom: 0.4rem;
+
   span:first-child {
     background-color: $accent;
     padding: 0.2rem 0.4rem;

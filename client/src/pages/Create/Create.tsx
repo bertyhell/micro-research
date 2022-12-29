@@ -206,15 +206,15 @@ function Create() {
         title={projectTitleError || undefined}
       >
         <label>Title of the research project</label>
-        <p>
-          This will only be show on the results page. It describes what
-          you&apos;re trying to investigate.
-        </p>
         <input
           type="text"
           value={projectTitle}
           onChange={(evt) => setProjectTitle(evt.target.value)}
         />
+        <p>
+          This will only be show on the results page. It describes what
+          you&apos;re trying to investigate.
+        </p>
       </div>
     );
   };
@@ -297,19 +297,19 @@ function Create() {
           className={step === Step.ProjectTitle ? "c-step--active" : ""}
           onClick={() => setStep(Step.ProjectTitle)}
         >
-          PROJECT
+          <span>1</span>PROJECT
         </li>
         <li
           className={step === Step.FirstQuestion ? "c-step--active" : ""}
           onClick={() => setStep(Step.FirstQuestion)}
         >
-          FIRST QUESTION
+          <span>2</span>FIRST QUESTION
         </li>
         <li
           className={step === Step.SecondQuestion ? "c-step--active" : ""}
           onClick={() => setStep(Step.SecondQuestion)}
         >
-          SECOND QUESTION
+          <span>3</span>SECOND QUESTION
         </li>
       </ul>
       {renderStep()}

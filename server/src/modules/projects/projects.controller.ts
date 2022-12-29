@@ -15,12 +15,14 @@ import { ProjectsService } from './projects.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { ProjectDetailResponse } from './dto/get-project.dto';
 import { ProjectRankedResponse } from './dto/get-projects-by-title.dto';
+import { Throttle } from '@nestjs/throttler';
 
 @ApiTags('projects')
 @Controller('projects')
 export class ProjectsController {
   constructor(private readonly projectsService: ProjectsService) {}
 
+  @Throttle(1, 120)
   @ApiOperation({
     description: 'Create a new project with 2 questions and their answers',
   })
@@ -34,6 +36,7 @@ export class ProjectsController {
     return this.projectsService.create(createProjectDto);
   }
 
+  @Throttle(60, 60)
   @ApiOperation({ description: 'Get project by tag count' })
   @ApiResponse({
     status: 200,

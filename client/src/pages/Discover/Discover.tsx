@@ -12,17 +12,17 @@ import { Link } from "react-router-dom";
 
 function Discover() {
   const interestingProjects = useProjectsControllerGetByTag({
-    queryParams: {
+    pathParams: {
       tag: "Interesting",
     },
   });
   const surprisingProjects = useProjectsControllerGetByTag({
-    queryParams: {
-      tag: "Suprising",
+    pathParams: {
+      tag: "Surprising",
     },
   });
   const obviousProjects = useProjectsControllerGetByTag({
-    queryParams: {
+    pathParams: {
       tag: "Obvious",
     },
   });
