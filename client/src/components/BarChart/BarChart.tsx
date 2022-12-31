@@ -11,6 +11,7 @@ import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 import "./BarChart.scss";
 import { AdvancedDynamicTexture } from "@babylonjs/gui/2D/advancedDynamicTexture";
 import { TextBlock } from "@babylonjs/gui/2D/controls/textBlock";
+import { formatNumber } from "./helpers/format-number";
 
 export interface BarChartProps {
   xLabels: string[];
@@ -54,30 +55,6 @@ const BarChart: FC<BarChartProps> = ({ xLabels, yLabels, data }) => {
     // Default intensity is 1. Let's dim the light a small amount
     light.intensity = 0.7;
 
-    const boxMaterial = new StandardMaterial("green", scene);
-    boxMaterial.diffuseColor = new Color3(44 / 255, 122 / 255, 123 / 255);
-
-    // Bars
-    const max = Math.max(...data.flat());
-    const heightScale = max ? 4 / max : 1;
-    data.forEach((row: number[], rowIndex: number) => {
-      row.forEach((cel: number, celIndex: number) => {
-        const barHeight = Math.max(cel * heightScale, 0.01);
-        const rowPosition = rowIndex * 2 + 1;
-        const columnPosition = celIndex * 2 + 1;
-        const heightPosition = (cel / 2) * heightScale;
-
-        const box = MeshBuilder.CreateBox(
-          "box",
-          { width: 1, depth: 1, height: barHeight },
-          scene
-        );
-        box.position = new Vector3(rowPosition, heightPosition, columnPosition);
-        box.material = boxMaterial;
-      });
-    });
-
-    // Our built-in 'ground' shape. Params: name, width, depth, subdivs, scene
     const ground = MeshBuilder.CreateGround(
       "ground1",
       {
@@ -92,6 +69,49 @@ const BarChart: FC<BarChartProps> = ({ xLabels, yLabels, data }) => {
     groundMaterial.diffuseColor = new Color3(0.5, 0.5, 0.5);
     groundMaterial.alpha = 0.4;
     ground.material = groundMaterial;
+
+    // Bars
+    const boxMaterial = new StandardMaterial("green", scene);
+    boxMaterial.diffuseColor = new Color3(229 / 255, 114 / 255, 8 / 255);
+    const max = Math.max(...data.flat());
+    const heightScale = max ? 4 / max : 1;
+    data.forEach((row: number[], rowIndex: number) => {
+      row.forEach((cel: number, celIndex: number) => {
+        // Bar
+        const barHeight = Math.max(cel * heightScale, 0.01);
+        const rowPosition = rowIndex * 2 + 1;
+        const columnPosition = celIndex * 2 + 1;
+        const heightPosition = (cel / 2) * heightScale;
+
+        const box = MeshBuilder.CreateBox(
+          "box",
+          { width: 1, depth: 1, height: barHeight },
+          scene
+        );
+        box.position = new Vector3(rowPosition, heightPosition, columnPosition);
+        box.material = boxMaterial;
+
+        // Label
+        const labelPlane = MeshBuilder.CreatePlane("countLabelPlane", {
+          width: 2,
+          height: 2,
+        });
+        labelPlane.parent = ground;
+        labelPlane.position = new Vector3(
+          rowIndex * 2 - xLabels.length + 1,
+          cel * heightScale + 0.001,
+          celIndex * 2 - yLabels.length + 1
+        );
+        labelPlane.rotation = new Vector3(deg(90), deg(180 + 45), deg(0));
+        const advancedTexture =
+          AdvancedDynamicTexture.CreateForMesh(labelPlane);
+        const label = new TextBlock();
+        label.text = formatNumber(cel, 3);
+        label.color = "white";
+        label.fontSize = 200;
+        advancedTexture.addControl(label);
+      });
+    });
 
     // Labels
 
@@ -131,7 +151,7 @@ const BarChart: FC<BarChartProps> = ({ xLabels, yLabels, data }) => {
       labelPlane.position = new Vector3(
         data.length + LABEL_SIZE / 2 + 0.5,
         0,
-        labelYIndex * 2 - 1
+        labelYIndex * 2 - data[0].length + 1
       );
       labelPlane.rotation = new Vector3(deg(90), deg(180), deg(0));
       const advancedTexture = AdvancedDynamicTexture.CreateForMesh(labelPlane);
