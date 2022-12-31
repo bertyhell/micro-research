@@ -145,7 +145,7 @@
       }
 
       &:disabled {
-        background-color: #ddd;
+        background-color: $bg;
       }
     }
   }
@@ -157,13 +157,13 @@
   &:focus {
     outline: none;
     border-style: dashed;
-    background-color: color.adjust($accent, $lightness: -20%);
+    background-color: color.adjust($ctaColor, $lightness: -20%);
   }
 }
 
 .c-button__add-answer {
   margin: 0 auto 2rem auto;
-  background-color: #ddd;
+  background-color: $bg;
   color: $accent;
 
   &:focus {

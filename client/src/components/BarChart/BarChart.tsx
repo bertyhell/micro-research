@@ -1,18 +1,16 @@
 import React, { FC, useEffect } from "react";
-import {
-  ArcRotateCamera,
-  Color3,
-  Color4,
-  Engine,
-  HemisphericLight,
-  MeshBuilder,
-  Scene,
-  StandardMaterial,
-  Vector3,
-} from "@babylonjs/core";
-import { AdvancedDynamicTexture, TextBlock } from "@babylonjs/gui";
+import { Engine } from "@babylonjs/core/Engines/engine";
+import { Scene } from "@babylonjs/core/scene";
+import { Color3, Color4 } from "@babylonjs/core/Maths/math.color";
+import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
+import { Vector3 } from "@babylonjs/core/Maths/math.vector";
+import { HemisphericLight } from "@babylonjs/core/Lights/hemisphericLight";
+import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
+import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 
 import "./BarChart.scss";
+import { AdvancedDynamicTexture } from "@babylonjs/gui/2D/advancedDynamicTexture";
+import { TextBlock } from "@babylonjs/gui/2D/controls/textBlock";
 
 export interface BarChartProps {
   xLabels: string[];
@@ -141,6 +139,11 @@ const BarChart: FC<BarChartProps> = ({ xLabels, yLabels, data }) => {
     engine.runRenderLoop(() => {
       scene.render();
     });
+
+    return () => {
+      scene.dispose();
+      engine.dispose();
+    };
   }, []);
 
   return <canvas id="renderCanvas"></canvas>;
