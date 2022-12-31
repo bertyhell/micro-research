@@ -35,10 +35,9 @@ const BarChart: FC<BarChartProps> = ({ xLabels, yLabels, data }) => {
       deg(60),
       deg(30),
       12,
-      new Vector3(0, 0, 0),
+      new Vector3(xLabels.length, 0, yLabels.length),
       scene
     );
-
     camera.lowerAlphaLimit = deg(0);
     camera.upperAlphaLimit = deg(90);
     camera.lowerBetaLimit = deg(15);
@@ -57,7 +56,6 @@ const BarChart: FC<BarChartProps> = ({ xLabels, yLabels, data }) => {
 
     const boxMaterial = new StandardMaterial("green", scene);
     boxMaterial.diffuseColor = new Color3(44 / 255, 122 / 255, 123 / 255);
-    boxMaterial.alpha = 0.95;
 
     // Bars
     const max = Math.max(...data.flat());
@@ -65,8 +63,8 @@ const BarChart: FC<BarChartProps> = ({ xLabels, yLabels, data }) => {
     data.forEach((row: number[], rowIndex: number) => {
       row.forEach((cel: number, celIndex: number) => {
         const barHeight = Math.max(cel * heightScale, 0.01);
-        const rowPosition = rowIndex * 2 - data.length / 2;
-        const columnPosition = celIndex * 2 - row.length / 2;
+        const rowPosition = rowIndex * 2 + 1;
+        const columnPosition = celIndex * 2 + 1;
         const heightPosition = (cel / 2) * heightScale;
 
         const box = MeshBuilder.CreateBox(
@@ -82,57 +80,68 @@ const BarChart: FC<BarChartProps> = ({ xLabels, yLabels, data }) => {
     // Our built-in 'ground' shape. Params: name, width, depth, subdivs, scene
     const ground = MeshBuilder.CreateGround(
       "ground1",
-      { width: 6, height: 6, subdivisions: 2 },
+      {
+        width: xLabels.length * 2,
+        height: yLabels.length * 2,
+        subdivisions: 1,
+      },
       scene
     );
+    ground.position = new Vector3(xLabels.length, 0, yLabels.length);
     const groundMaterial = new StandardMaterial("ground", scene);
     groundMaterial.diffuseColor = new Color3(0.5, 0.5, 0.5);
-    groundMaterial.alpha = 0.05;
+    groundMaterial.alpha = 0.4;
     ground.material = groundMaterial;
 
     // Labels
 
     // xLabels
-    xLabels.forEach((labelY, labelYIndex) => {
+    xLabels.forEach((labelX, labelXIndex) => {
+      const LABEL_SIZE = 10;
       const labelPlane = MeshBuilder.CreatePlane("plane", {
-        width: 10,
-        height: 10,
+        width: LABEL_SIZE,
+        height: 2,
       });
       labelPlane.parent = ground;
       labelPlane.position = new Vector3(
-        -data[0].length / 2 + labelYIndex * 2,
-        0.2,
-        data.length + 1 + 4
+        labelXIndex * 2 - xLabels.length + 1,
+        0,
+        data[0].length + LABEL_SIZE / 2 + 0.5
       );
       labelPlane.rotation = new Vector3(deg(90), deg(-90), deg(0));
       const advancedTexture = AdvancedDynamicTexture.CreateForMesh(labelPlane);
       const label = new TextBlock();
-      label.text = labelY;
+      label.text = labelX;
       label.textHorizontalAlignment = TextBlock.HORIZONTAL_ALIGNMENT_LEFT;
       label.color = "black";
       label.fontSize = 50;
+      advancedTexture.vScale = (1 / LABEL_SIZE) * 2;
+      advancedTexture.vOffset = (1 / LABEL_SIZE) * 4;
       advancedTexture.addControl(label);
     });
 
     // yLabels
-    yLabels.forEach((labelX, labelXIndex) => {
+    yLabels.forEach((labelY, labelYIndex) => {
+      const LABEL_SIZE = 10;
       const labelPlane = MeshBuilder.CreatePlane("plane", {
-        width: 10,
-        height: 10,
+        width: LABEL_SIZE,
+        height: 2,
       });
       labelPlane.parent = ground;
       labelPlane.position = new Vector3(
-        data.length + 1 + 4,
-        0.2,
-        -data[0].length / 2 + labelXIndex * 2
+        data.length + LABEL_SIZE / 2 + 0.5,
+        0,
+        labelYIndex * 2 - 1
       );
       labelPlane.rotation = new Vector3(deg(90), deg(180), deg(0));
       const advancedTexture = AdvancedDynamicTexture.CreateForMesh(labelPlane);
       const label = new TextBlock();
-      label.text = labelX;
+      label.text = labelY;
       label.textHorizontalAlignment = TextBlock.HORIZONTAL_ALIGNMENT_RIGHT;
       label.color = "black";
       label.fontSize = 50;
+      advancedTexture.vScale = (1 / LABEL_SIZE) * 2;
+      advancedTexture.vOffset = (1 / LABEL_SIZE) * 4;
       advancedTexture.addControl(label);
     });
 
