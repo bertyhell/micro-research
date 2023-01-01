@@ -5,7 +5,7 @@ import { ApiTags } from '@nestjs/swagger';
 @ApiTags('status')
 @Controller()
 export class AppController {
-  @Get()
+  @Get('status')
   status(): { message: string; version: string } {
     return {
       message: 'API is up and running',
