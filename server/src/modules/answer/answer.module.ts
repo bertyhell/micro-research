@@ -4,7 +4,7 @@ import { AnswerController } from './answer.controller';
 import { DatabaseModule } from '../database/database.module';
 
 @Module({
-  imports: [DatabaseModule],
+  imports: [TypeOrmModule.forRoot()],
   controllers: [AnswerController],
   providers: [AnswerService],
 })

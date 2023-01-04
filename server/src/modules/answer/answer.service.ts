@@ -3,7 +3,7 @@ import { DatabaseService } from '../database/database.service';
 
 @Injectable()
 export class AnswerService {
-  constructor(private databaseService: DatabaseService) {}
+  constructor(private dataSource: DataSource) {}
 
   findUnanswered(answeredIds: string[]) {
     return this.databaseService.project.findFirst({

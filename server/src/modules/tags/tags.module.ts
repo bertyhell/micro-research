@@ -5,7 +5,7 @@ import { DatabaseModule } from '../database/database.module';
 
 @Module({
   controllers: [TagsController],
-  imports: [DatabaseModule],
+  imports: [TypeOrmModule.forRoot()],
   providers: [TagsService],
 })
 export class TagsModule {}

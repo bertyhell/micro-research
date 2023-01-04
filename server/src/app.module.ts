@@ -7,6 +7,7 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { TypeOrmModule } from "@nestjs/typeorm";
 
 @Module({
   imports: [
@@ -16,6 +17,16 @@ import { join } from 'path';
     ThrottlerModule.forRoot({
       ttl: 60,
       limit: 10,
+    }),
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: 'localhost',
+      port: 5432,
+      username: 'postgres',
+      password: 'postgres',
+      database: 'micro-research',
+      entities: [],
+      synchronize: true,
     }),
     ProjectsModule,
     AnswerModule,

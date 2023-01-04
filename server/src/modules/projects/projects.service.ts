@@ -1,22 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { CreateProjectDto } from './dto/create-project.dto';
-import { DatabaseService } from '../database/database.service';
 import { ProjectRankedResponse } from './dto/get-projects-by-title.dto';
+import { DataSource } from 'typeorm';
 
 @Injectable()
 export class ProjectsService {
-  constructor(private databaseService: DatabaseService) {}
+  constructor(private dataSource: DataSource) {}
 
   async create(createProjectDto: CreateProjectDto) {
-    const projectId: string = await this.databaseService.$transaction(
-      async (prisma) => {
-        const project = await prisma.project.create({
+    const projectId: string = await this.dataSource.transaction(
+      async (entityManager) => {
+        const project = await entityManager.project.create({
           data: {
             title: createProjectDto.title,
           },
         });
         await Promise.all([
-          prisma.question.create({
+          entityManager.question.create({
             data: {
               title: createProjectDto.questions[0].title,
               projectId: project.id,
@@ -32,7 +32,7 @@ export class ProjectsService {
               },
             },
           }),
-          prisma.question.create({
+          entityManager.question.create({
             data: {
               title: createProjectDto.questions[1].title,
               projectId: project.id,

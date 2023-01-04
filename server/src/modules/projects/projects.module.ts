@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ProjectsService } from './projects.service';
 import { ProjectsController } from './projects.controller';
-import { DatabaseModule } from '../database/database.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
-  imports: [DatabaseModule],
+  imports: [TypeOrmModule.forRoot()],
   controllers: [ProjectsController],
   providers: [ProjectsService],
 })

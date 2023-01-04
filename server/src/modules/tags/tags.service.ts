@@ -4,7 +4,7 @@ import { TagResponse } from './dto/get-tags';
 
 @Injectable()
 export class TagsService {
-  constructor(private databaseService: DatabaseService) {}
+  constructor(private dataSource: DataSource) {}
 
   async findAll(): Promise<TagResponse[]> {
     return this.databaseService.tag.findMany({
