@@ -7,7 +7,7 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
-import { TypeOrmModule } from "@nestjs/typeorm";
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [
@@ -25,8 +25,9 @@ import { TypeOrmModule } from "@nestjs/typeorm";
       username: 'postgres',
       password: 'postgres',
       database: 'micro-research',
-      entities: [],
+      entities: ['dist/src/entities/*.entity.{ts,js}'],
       synchronize: true,
+      autoLoadEntities: true,
     }),
     ProjectsModule,
     AnswerModule,

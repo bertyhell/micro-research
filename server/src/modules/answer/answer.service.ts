@@ -1,30 +1,26 @@
 import { Injectable } from '@nestjs/common';
-import { DatabaseService } from '../database/database.service';
+import { DataSource, In, Not } from 'typeorm';
+import { Project } from '../../entities/project.entity';
 
 @Injectable()
 export class AnswerService {
   constructor(private dataSource: DataSource) {}
 
-  findUnanswered(answeredIds: string[]) {
-    return this.databaseService.project.findFirst({
+  findUnanswered(answeredIds: string[]): Promise<Project> {
+    return this.dataSource.getRepository(Project).findOne({
       where: {
-        NOT: {
-          id: {
-            in: answeredIds,
-          },
+        id: Not(In(answeredIds)),
+      },
+      relations: {
+        questions: {
+          answers: true,
         },
       },
-      include: {
+      order: {
         questions: {
-          include: {
-            answers: {
-              orderBy: {
-                order: 'asc',
-              },
-            },
-          },
-          orderBy: {
-            order: 'asc',
+          order: 'ASC',
+          answers: {
+            order: 'ASC',
           },
         },
       },
@@ -36,47 +32,19 @@ export class AnswerService {
     firstAnswerId: string,
     secondAnswerId: string,
   ): Promise<void> {
-    const responseObject = await this.databaseService.response.findFirst({
-      where: {
-        projectId: {
-          equals: projectId,
+    await this.dataSource
+      .createQueryBuilder()
+      .update(Response)
+      .set({ count: () => 'count + 1' })
+      .where(
+        'firstAnswerId = :firstAnswerId1 AND secondAnswerId = :secondAnswerId1 OR firstAnswerId = :secondAnswerId2 AND secondAnswerId = :firstAnswerId2',
+        {
+          firstAnswerId1: firstAnswerId,
+          firstAnswerId2: firstAnswerId,
+          secondAnswerId1: secondAnswerId,
+          secondAnswerId2: secondAnswerId,
         },
-        firstAnswerId: {
-          in: [firstAnswerId, secondAnswerId],
-        },
-        secondAnswerId: {
-          in: [firstAnswerId, secondAnswerId],
-        },
-      },
-    });
-    if (responseObject) {
-      await this.databaseService.response.updateMany({
-        where: {
-          projectId: {
-            equals: projectId,
-          },
-          firstAnswerId: {
-            in: [firstAnswerId, secondAnswerId],
-          },
-          secondAnswerId: {
-            in: [firstAnswerId, secondAnswerId],
-          },
-        },
-        data: {
-          count: {
-            increment: 1,
-          },
-        },
-      });
-    } else {
-      await this.databaseService.response.create({
-        data: {
-          projectId,
-          firstAnswerId,
-          secondAnswerId,
-          count: 1,
-        },
-      });
-    }
+      )
+      .execute();
   }
 }

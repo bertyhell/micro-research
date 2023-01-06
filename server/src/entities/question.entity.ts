@@ -1,4 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  ManyToOne,
+  JoinColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Project } from './project.entity';
 import { Answer } from './answer.entity';
 
@@ -13,18 +22,26 @@ export class Question {
   @Column({ default: 0 })
   order: number;
 
-  @Column()
+  @OneToMany((type) => Answer, (answer) => answer.question)
   answers: Answer[];
 
   @Column()
   projectId: string;
 
-  @Column()
+  @ManyToOne((type) => Project, (project) => project.questions)
+  @JoinColumn({ name: 'projectId' })
   project: Project;
 
-  @Column()
+  @CreateDateColumn({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP(6)',
+  })
   createdAt: Date;
 
-  @Column()
+  @UpdateDateColumn({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP(6)',
+    onUpdate: 'CURRENT_TIMESTAMP(6)',
+  })
   updatedAt: Date;
 }

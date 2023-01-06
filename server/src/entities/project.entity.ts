@@ -1,6 +1,14 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Question } from './question.entity';
-import { TagLink } from '../modules/generated/tagLink.entity';
+import { TagLink } from './tag-link.entity';
+import { Response } from './response.entity';
 
 @Entity()
 export class Project {
@@ -10,7 +18,7 @@ export class Project {
   @Column()
   title: string;
 
-  @Column()
+  @OneToMany((type) => Question, (question) => question.project)
   questions: Question[];
 
   @Column({ default: false })
@@ -19,12 +27,19 @@ export class Project {
   @OneToMany((type) => TagLink, (tagLink) => tagLink.project)
   tagLinks: TagLink[];
 
-  @Column()
+  @OneToMany((type) => Response, (response) => response.project)
   responses: Response[];
 
-  @Column({ default: new Date() })
+  @CreateDateColumn({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP(6)',
+  })
   createdAt: Date;
 
-  @Column()
+  @UpdateDateColumn({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP(6)',
+    onUpdate: 'CURRENT_TIMESTAMP(6)',
+  })
   updatedAt: Date;
 }

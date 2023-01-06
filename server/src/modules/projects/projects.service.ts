@@ -2,6 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { ProjectRankedResponse } from './dto/get-projects-by-title.dto';
 import { DataSource } from 'typeorm';
+import { TagLink } from '../../entities/tag-link.entity';
+import { Project } from '../../entities/project.entity';
+import { Question } from '../../entities/question.entity';
+import { Answer } from '../../entities/answer.entity';
 
 @Injectable()
 export class ProjectsService {
@@ -10,67 +14,69 @@ export class ProjectsService {
   async create(createProjectDto: CreateProjectDto) {
     const projectId: string = await this.dataSource.transaction(
       async (entityManager) => {
-        const project = await entityManager.project.create({
-          data: {
+        // Insert project
+        const projectResponse = await entityManager
+          .getRepository(Project)
+          .insert({
             title: createProjectDto.title,
-          },
-        });
-        await Promise.all([
-          entityManager.question.create({
-            data: {
-              title: createProjectDto.questions[0].title,
-              projectId: project.id,
-              answers: {
-                createMany: {
-                  data: createProjectDto.questions[0].answers.map(
-                    (answer, index) => ({
-                      title: answer,
-                      order: index,
-                    }),
-                  ),
-                },
-              },
-            },
+          });
+
+        // Insert questions
+        const questionResponses = await Promise.all([
+          entityManager.getRepository(Question).insert({
+            title: createProjectDto.questions[0].title,
+            projectId: projectResponse.raw.id,
           }),
-          entityManager.question.create({
-            data: {
-              title: createProjectDto.questions[1].title,
-              projectId: project.id,
-              answers: {
-                createMany: {
-                  data: createProjectDto.questions[1].answers.map(
-                    (answer, index) => ({
-                      title: answer,
-                      order: index,
-                    }),
-                  ),
-                },
-              },
-            },
+          entityManager.getRepository(Question).insert({
+            title: createProjectDto.questions[1].title,
+            projectId: projectResponse.raw.id,
           }),
         ]);
 
-        return project.id;
+        // Insert answers
+        await entityManager
+          .createQueryBuilder()
+          .insert()
+          .into(Answer)
+          .values([
+            ...createProjectDto.questions[0].answers.map(
+              (answer, index): Partial<Answer> => ({
+                title: answer,
+                order: index,
+                questionId: questionResponses[0].raw.id,
+              }),
+            ),
+            ...createProjectDto.questions[1].answers.map(
+              (answer, index): Partial<Answer> => ({
+                title: answer,
+                order: index,
+                questionId: questionResponses[0].raw.id,
+              }),
+            ),
+          ])
+          .execute();
+
+        return projectResponse.raw.id;
       },
     );
-    return this.findOne(projectId);
+    return this.dataSource.getRepository(Project).findOne({
+      where: {
+        id: projectId,
+      },
+    });
   }
 
   findOne(id: string) {
-    return this.databaseService.project.findUnique({
+    return this.dataSource.getRepository(Project).findOne({
       where: {
         id,
       },
-      include: {
+      relations: {
         questions: {
-          include: {
-            answers: true,
-          },
+          answers: true,
         },
         tagLinks: {
-          include: {
-            tag: true,
-          },
+          tag: true,
         },
         responses: true,
       },
@@ -82,35 +88,58 @@ export class ProjectsService {
     skip: number,
     take: number,
   ): Promise<ProjectRankedResponse[]> {
-    return this.databaseService.$queryRaw<ProjectRankedResponse[]>`
-        SELECT "Project"."id", "Project"."title", "TagLink"."count"
-        from "Project"
-                 JOIN "TagLink" ON "Project"."id" = "TagLink"."projectId"
-                 JOIN "Tag" ON "TagLink"."tagId" = "Tag"."id"
-        WHERE lower("Tag"."title") = lower(${tag})
-        ORDER BY "TagLink"."count" DESC
-            LIMIT ${take}
-        OFFSET ${skip}
-    `;
+    const projectRows = await this.dataSource
+      .getRepository(Project)
+      .createQueryBuilder('project')
+      .select('project.id')
+      .select('project.title')
+      .select('tagLink.count')
+      .leftJoin('project.tagLinks', 'tagLink', 'project.id = tagLink.projectId')
+      .leftJoin('tagLink.tag', 'tag', 'tagLink.tagId = tag.id')
+      .where('lower(tag.title) = lower(:tag)', { tag })
+      .orderBy('tagLink.count', 'DESC')
+      .skip(skip)
+      .limit(take)
+      .getRawMany();
+
+    return projectRows.map((projectRow) => ({
+      title: projectRow.title,
+      id: projectRow.id,
+      count: projectRow.count,
+    }));
   }
 
   async getByAnswerCount(
     skip: number,
     take: number,
   ): Promise<ProjectRankedResponse[]> {
-    return this.databaseService.$queryRaw<ProjectRankedResponse[]>`
-        SELECT "Project"."id", "Project"."title", SUM("Response"."count") as "count"
-        from "Project"
-                 JOIN "Response" ON "Project"."id" = "Response"."projectId"
-        GROUP BY "Project"."id", "Project"."title"
-        ORDER BY SUM("Response"."count") DESC
-            LIMIT ${take}
-        OFFSET ${skip}
-    `;
+    const projectRows = await this.dataSource
+      .getRepository(Project)
+      .createQueryBuilder('project')
+      .select('project.id')
+      .select('project.title')
+      .select('SUM(response.count)', 'count')
+      .leftJoin(
+        'project.responses',
+        'response',
+        'project.id = response.projectId',
+      )
+      .groupBy('project.id')
+      .addGroupBy('project.title')
+      .orderBy('SUM(response.count)', 'DESC')
+      .skip(skip)
+      .limit(take)
+      .getRawMany();
+
+    return projectRows.map((projectRow) => ({
+      title: projectRow.title,
+      id: projectRow.id,
+      count: projectRow.count,
+    }));
   }
 
   async incrementTagLink(projectId: string, tagId: string): Promise<number> {
-    const tagLink = await this.databaseService.tagLink.findFirst({
+    const tagLink = await this.dataSource.getRepository(TagLink).findOne({
       where: {
         projectId,
         tagId,
@@ -118,23 +147,23 @@ export class ProjectsService {
     });
     if (tagLink) {
       // increment
-      const response = await this.databaseService.tagLink.update({
-        data: {
+      const response = await this.dataSource.getRepository(TagLink).update(
+        {
+          id: tagLink.id,
+        },
+        {
           count: tagLink.count + 1,
         },
-        where: { id: tagLink.id },
-      });
-      return response.count;
+      );
+      return response.raw.count;
     } else {
       // create and set to 1
-      const response = await this.databaseService.tagLink.create({
-        data: {
-          projectId,
-          tagId,
-          count: 1,
-        },
+      const response = await this.dataSource.getRepository(TagLink).insert({
+        projectId,
+        tagId,
+        count: 1,
       });
-      return response.count;
+      return response.raw.count;
     }
   }
 }

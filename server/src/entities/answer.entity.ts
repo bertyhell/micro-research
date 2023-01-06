@@ -1,6 +1,15 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
-import { Project } from './project.entity';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  ManyToOne,
+  JoinColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Question } from './question.entity';
+import { Response } from './response.entity';
 
 @Entity()
 export class Answer {
@@ -16,18 +25,26 @@ export class Answer {
   @Column()
   questionId: string;
 
-  @Column()
+  @ManyToOne((type) => Question, (question) => question.answers)
+  @JoinColumn({ name: 'questionId' })
   question: Question;
 
-  @Column()
+  @OneToMany((type) => Response, (response) => response.firstAnswer)
   firstResponses: Response[];
 
-  @Column()
+  @OneToMany((type) => Response, (response) => response.secondAnswer)
   secondResponses: Response[];
 
-  @Column({ default: new Date() })
+  @CreateDateColumn({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP(6)',
+  })
   createdAt: Date;
 
-  @Column()
+  @UpdateDateColumn({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP(6)',
+    onUpdate: 'CURRENT_TIMESTAMP(6)',
+  })
   updatedAt: Date;
 }

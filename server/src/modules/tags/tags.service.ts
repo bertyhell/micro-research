@@ -1,17 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { DatabaseService } from '../database/database.service';
-import { TagResponse } from './dto/get-tags';
+import { DataSource } from 'typeorm';
+import { Tag } from '../../entities/tag.entity';
 
 @Injectable()
 export class TagsService {
   constructor(private dataSource: DataSource) {}
 
-  async findAll(): Promise<TagResponse[]> {
-    return this.databaseService.tag.findMany({
-      select: {
-        title: true,
-        id: true,
-      },
-    });
+  async findAll(): Promise<Tag[]> {
+    return this.dataSource.getRepository(Tag).find();
   }
 }

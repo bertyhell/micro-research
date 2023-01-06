@@ -1,5 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
-import { Question } from './question.entity';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { TagLink } from './tag-link.entity';
 
 @Entity()
 export class Tag {
@@ -9,24 +16,19 @@ export class Tag {
   @Column()
   title: string;
 
-  @Column({ default: 0 })
-  order: number;
+  @OneToMany((type) => TagLink, (tagLink) => tagLink.tag)
+  tagLinks: TagLink[];
 
-  @Column()
-  questionId: string;
-
-  @Column()
-  question: Question;
-
-  @Column()
-  firstResponses: Response[];
-
-  @Column()
-  secondResponses: Response[];
-
-  @Column({ default: new Date() })
+  @CreateDateColumn({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP(6)',
+  })
   createdAt: Date;
 
-  @Column()
+  @UpdateDateColumn({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP(6)',
+    onUpdate: 'CURRENT_TIMESTAMP(6)',
+  })
   updatedAt: Date;
 }

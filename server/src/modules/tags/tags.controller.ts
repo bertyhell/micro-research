@@ -16,7 +16,11 @@ export class TagsController {
     isArray: true,
   })
   @Get()
-  findAll() {
-    return this.tagsService.findAll();
+  async findAll(): Promise<TagResponse[]> {
+    const tags = await this.tagsService.findAll();
+    return tags.map((tag) => ({
+      id: tag.id,
+      title: tag.title,
+    }));
   }
 }
