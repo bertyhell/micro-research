@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class AnswerResponse {
+export class AnswerDto {
   @ApiProperty()
   id: string;
   @ApiProperty()
@@ -9,31 +9,31 @@ export class AnswerResponse {
   order: number;
 }
 
-export class QuestionResponse {
+export class QuestionDto {
   @ApiProperty()
   id: string;
   @ApiProperty()
   title: string;
   @ApiProperty({
     isArray: true,
-    type: AnswerResponse,
+    type: AnswerDto,
   })
-  answers: AnswerResponse[];
+  answers: AnswerDto[];
 }
 
-export class ProjectResponse {
+export class ProjectDto {
   @ApiProperty()
   id: string;
   @ApiProperty()
   title: string;
   @ApiProperty({
     isArray: true,
-    type: QuestionResponse,
+    type: QuestionDto,
   })
-  questions: QuestionResponse[];
+  questions: QuestionDto[];
 }
 
-export class AnswerProjectResponse {
+export class AnswerProjectDto {
   @ApiProperty()
   message: 'success';
 }

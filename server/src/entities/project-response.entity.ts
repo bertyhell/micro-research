@@ -11,7 +11,7 @@ import { Project } from './project.entity';
 import { Answer } from './answer.entity';
 
 @Entity()
-export class Response {
+export class ProjectResponse {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

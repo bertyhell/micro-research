@@ -72,6 +72,13 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 
 Nest is [MIT licensed](LICENSE).
 
+## Typeorm migrations:
+
+create a migration
+```bash
+npm run typeorm:generate-migration --name=InitialDatabaseSetup
+```
+
 ## Deploy on android
 * install termux
 * install debian: https://github.com/sp4rkie/debian-on-termux

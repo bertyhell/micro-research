@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 import { Question } from './question.entity';
 import { TagLink } from './tag-link.entity';
-import { Response } from './response.entity';
+import { ProjectResponse } from './project-response.entity';
 
 @Entity()
 export class Project {
@@ -27,8 +27,8 @@ export class Project {
   @OneToMany((type) => TagLink, (tagLink) => tagLink.project)
   tagLinks: TagLink[];
 
-  @OneToMany((type) => Response, (response) => response.project)
-  responses: Response[];
+  @OneToMany((type) => ProjectResponse, (response) => response.project)
+  responses: ProjectResponse[];
 
   @CreateDateColumn({
     type: 'timestamp',

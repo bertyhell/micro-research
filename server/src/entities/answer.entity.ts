@@ -9,7 +9,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Question } from './question.entity';
-import { Response } from './response.entity';
+import { ProjectResponse } from './project-response.entity';
 
 @Entity()
 export class Answer {
@@ -29,11 +29,11 @@ export class Answer {
   @JoinColumn({ name: 'questionId' })
   question: Question;
 
-  @OneToMany((type) => Response, (response) => response.firstAnswer)
-  firstResponses: Response[];
+  @OneToMany((type) => ProjectResponse, (response) => response.firstAnswer)
+  firstResponses: ProjectResponse[];
 
-  @OneToMany((type) => Response, (response) => response.secondAnswer)
-  secondResponses: Response[];
+  @OneToMany((type) => ProjectResponse, (response) => response.secondAnswer)
+  secondResponses: ProjectResponse[];
 
   @CreateDateColumn({
     type: 'timestamp',

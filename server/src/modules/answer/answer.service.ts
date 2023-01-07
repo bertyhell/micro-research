@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource, In, Not } from 'typeorm';
 import { Project } from '../../entities/project.entity';
+import { ProjectResponse } from '../../entities/project-response.entity';
 
 @Injectable()
 export class AnswerService {
@@ -34,7 +35,7 @@ export class AnswerService {
   ): Promise<void> {
     await this.dataSource
       .createQueryBuilder()
-      .update(Response)
+      .update(ProjectResponse)
       .set({ count: () => 'count + 1' })
       .where(
         'firstAnswerId = :firstAnswerId1 AND secondAnswerId = :secondAnswerId1 OR firstAnswerId = :secondAnswerId2 AND secondAnswerId = :firstAnswerId2',
