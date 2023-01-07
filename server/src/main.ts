@@ -9,6 +9,9 @@ async function bootstrap() {
   // Cors
   app.enableCors();
 
+  // Prefix
+  app.setGlobalPrefix('api');
+
   // Swagger docs
   const config = new DocumentBuilder()
     .setTitle('Micro research API docs')

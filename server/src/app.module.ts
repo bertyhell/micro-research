@@ -8,8 +8,9 @@ import { APP_GUARD } from '@nestjs/core';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SeedModule } from './modules/seed/seed.module';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { initialDatabase1673104526515 } from './migrations/1673104526515-initialDatabase';
 
 @Module({
   imports: [
@@ -32,7 +33,7 @@ import { SeedModule } from './modules/seed/seed.module';
         password: configService.get('POSTGRES_PASSWORD'),
         database: configService.get('POSTGRES_DB'),
         schema: configService.get('POSTGRES_SCHEMA'),
-        entities: [],
+        migrations: [initialDatabase1673104526515],
         autoLoadEntities: true,
       }),
     }),

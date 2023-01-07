@@ -1,14 +1,10 @@
-import {
-  Controller,
-  Post,
-  Body,
-  Query,
-  BadRequestException,
-} from '@nestjs/common';
+import { Controller, Post, Body, BadRequestException } from '@nestjs/common';
 import { SeedService } from './seed.service';
-import { CreateSeedDto } from './dto/create-seed.dto';
 import { ConfigService } from '@nestjs/config';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { SeedBodyDto } from './dto/seed-body.dto';
 
+@ApiTags('seed')
 @Controller('seed')
 export class SeedController {
   constructor(
@@ -16,14 +12,21 @@ export class SeedController {
     private readonly seedService: SeedService,
   ) {}
 
+  @ApiOperation({ description: 'Put initial data into the database' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of projects by tags count, paginated',
+    type: typeof { message: 'success' },
+  })
   @Post()
-  create(@Query('apiKey') apiKey, @Body() createSeedDto: CreateSeedDto) {
-    if (apiKey !== this.configService.get('API_KEY')) {
+  async seed(@Body() body: SeedBodyDto): Promise<{ message: 'success' }> {
+    if (body.apiKey !== this.configService.get('API_KEY')) {
       throw new BadRequestException(
         'The apiKey query param was not present or not valid. Received value: ' +
-          apiKey,
+          body.apiKey,
       );
     }
-    return this.seedService.seedDatabase();
+    await this.seedService.seedDatabase();
+    return { message: 'success' };
   }
 }

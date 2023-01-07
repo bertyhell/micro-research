@@ -8,9 +8,11 @@ import { Answer } from '../../entities/answer.entity';
 import { TagLink } from '../../entities/tag-link.entity';
 import { ProjectResponse } from '../../entities/project-response.entity';
 import { Tag } from '../../entities/tag.entity';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule,
     TypeOrmModule.forFeature([
       Project,
       Question,

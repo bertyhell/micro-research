@@ -55,24 +55,26 @@ export type ProjectRankedResponse = {
   count: number;
 };
 
-export type AnswerResponse = {
+export type AnswerDto = {
   id: string;
   title: string;
   order: number;
 };
 
-export type QuestionResponse = {
+export type QuestionDto = {
   id: string;
   title: string;
-  answers: AnswerResponse[];
+  answers: AnswerDto[];
 };
 
-export type ProjectResponse = {
+export type ProjectDto = {
   id: string;
   title: string;
-  questions: QuestionResponse[];
+  questions: QuestionDto[];
 };
 
-export type AnswerProjectResponse = {
+export type AnswerProjectDto = {
   message: string;
 };
+
+export type CreateSeedDto = {};

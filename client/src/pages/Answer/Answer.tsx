@@ -6,8 +6,8 @@ import {
 import Spinner from "../../components/Spinner/Spinner";
 import ErrorPage from "../../components/ErrorView/ErrorView";
 import {
-  AnswerResponse,
-  QuestionResponse,
+  AnswerDto,
+  QuestionDto,
 } from "../../generated/serverSchemas";
 import { faBed } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router";
@@ -58,7 +58,7 @@ function Answer() {
     navigate("/projects/" + unansweredProject.data?.id);
   };
 
-  const handleAnswer = async (answerOption: AnswerResponse) => {
+  const handleAnswer = async (answerOption: AnswerDto) => {
     if (!firstAnswerId) {
       // first answer
       setFirstAnswerId(answerOption.id);
@@ -68,7 +68,7 @@ function Answer() {
     }
   };
 
-  const renderQuestion = (question: QuestionResponse) => {
+  const renderQuestion = (question: QuestionDto) => {
     return (
       <div>
         <h1>{question.title}</h1>
