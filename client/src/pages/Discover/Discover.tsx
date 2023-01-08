@@ -2,6 +2,7 @@ import React from "react";
 import {
   ProjectsControllerGetByTagError,
   ProjectsControllerGetByTagResponse,
+  useProjectsControllerGetByAnswerCount,
   useProjectsControllerGetByTag,
 } from "../../generated/serverComponents";
 import Spinner from "../../components/Spinner/Spinner";
@@ -26,6 +27,7 @@ function Discover() {
       tag: "Obvious",
     },
   });
+  const votedProjects = useProjectsControllerGetByAnswerCount({});
 
   const renderProjects = (
     tagTitle: string,
@@ -67,6 +69,8 @@ function Discover() {
       {renderProjects("surprising", surprisingProjects)}
       <h2>Voted &quot;most obvious&quot; projects</h2>
       {renderProjects("obvious", obviousProjects)}
+      <h2>Voted &quot;voted on&quot; projects</h2>
+      {renderProjects("voted on", votedProjects)}
     </>
   );
 }

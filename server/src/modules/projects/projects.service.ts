@@ -6,6 +6,7 @@ import { TagLink } from '../../entities/tag-link.entity';
 import { Project } from '../../entities/project.entity';
 import { Question } from '../../entities/question.entity';
 import { Answer } from '../../entities/answer.entity';
+import { orderBy } from 'lodash';
 
 @Injectable()
 export class ProjectsService {
@@ -126,16 +127,19 @@ export class ProjectsService {
       )
       .groupBy('project.id')
       .addGroupBy('project.title')
-      .orderBy('SUM(response.count)', 'DESC')
       .skip(skip)
       .limit(take)
       .getRawMany();
 
-    return projectRows.map((projectRow) => ({
-      title: projectRow.title,
-      id: projectRow.id,
-      count: projectRow.count,
-    }));
+    return orderBy(
+      projectRows.map((projectRow) => ({
+        title: projectRow.title,
+        id: projectRow.id,
+        count: projectRow.count || 0,
+      })),
+      ['count'],
+      ['desc'],
+    );
   }
 
   async incrementTagLink(projectId: string, tagId: string): Promise<number> {
