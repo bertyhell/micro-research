@@ -7,7 +7,7 @@ import { ProjectResponse } from './src/entities/project-response.entity';
 import { Question } from './src/entities/question.entity';
 import { Tag } from './src/entities/tag.entity';
 import { TagLink } from './src/entities/tag-link.entity';
-import { initialDatabase1673104526515 } from './src/migrations/1673104526515-initialDatabase';
+import { DatabaseNamingStrategy } from './src/modules/helpers/database-naming-strategy';
 
 config();
 
@@ -22,5 +22,6 @@ export default new DataSource({
   database: configService.get('POSTGRES_DB'),
   schema: configService.get('POSTGRES_SCHEMA'),
   entities: [Answer, Project, ProjectResponse, Question, Tag, TagLink],
-  migrations: [initialDatabase1673104526515],
+  migrations: ['dist/src/migrations/*.js'],
+  namingStrategy: new DatabaseNamingStrategy(),
 });

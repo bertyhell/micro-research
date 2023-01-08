@@ -17,44 +17,73 @@ import seedProjectResponses from './seeds/seed-project-responses.json';
 export class SeedService {
   constructor(private dataSource: DataSource) {}
 
-  async seedDatabase(): Promise<void> {
-    await Promise.all([
-      this.dataSource
+  async clearTables(): Promise<void> {
+    await this.dataSource
+      .createQueryBuilder()
+      .delete()
+      .from(ProjectResponse)
+      .execute();
+    await this.dataSource.createQueryBuilder().delete().from(TagLink).execute();
+    await this.dataSource.createQueryBuilder().delete().from(Tag).execute();
+    await this.dataSource.createQueryBuilder().delete().from(Answer).execute();
+    await this.dataSource
+      .createQueryBuilder()
+      .delete()
+      .from(Question)
+      .execute();
+    await this.dataSource.createQueryBuilder().delete().from(Project).execute();
+  }
+
+  async insertSeedData(): Promise<void> {
+    try {
+      await this.dataSource
         .createQueryBuilder()
         .insert()
         .into(Project)
         .values(seedProjects)
-        .execute(),
-      this.dataSource
+        .execute();
+      await this.dataSource
         .createQueryBuilder()
         .insert()
         .into(Question)
         .values(seedQuestions)
-        .execute(),
-      this.dataSource
+        .execute();
+      await this.dataSource
         .createQueryBuilder()
         .insert()
         .into(Answer)
         .values(seedAnswers)
-        .execute(),
-      this.dataSource
+        .execute();
+      await this.dataSource
         .createQueryBuilder()
         .insert()
         .into(Tag)
         .values(seedTags)
-        .execute(),
-      this.dataSource
+        .execute();
+      await this.dataSource
         .createQueryBuilder()
         .insert()
         .into(TagLink)
         .values(seedTagLinks)
-        .execute(),
-      this.dataSource
+        .execute();
+      await this.dataSource
         .createQueryBuilder()
         .insert()
         .into(ProjectResponse)
         .values(seedProjectResponses)
-        .execute(),
-    ]);
+        .execute();
+    } catch (err) {
+      throw new Error(
+        JSON.stringify({
+          message: 'Failed to insert seed data into the database',
+          innerException: err,
+        }),
+      );
+    }
+  }
+
+  async seedDatabase(): Promise<void> {
+    await this.clearTables();
+    await this.insertSeedData();
   }
 }

@@ -18,7 +18,7 @@ export class TagLink {
   @Column()
   projectId: string;
 
-  @ManyToOne((type) => Tag, (tag) => tag.tagLinks)
+  @ManyToOne((type) => Project, (project) => project.tagLinks)
   @JoinColumn({ name: 'projectId' })
   project: Project;
 

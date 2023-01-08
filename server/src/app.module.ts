@@ -10,7 +10,7 @@ import { join } from 'path';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SeedModule } from './modules/seed/seed.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { initialDatabase1673104526515 } from './migrations/1673104526515-initialDatabase';
+import { DatabaseNamingStrategy } from './modules/helpers/database-naming-strategy';
 
 @Module({
   imports: [
@@ -33,8 +33,9 @@ import { initialDatabase1673104526515 } from './migrations/1673104526515-initial
         password: configService.get('POSTGRES_PASSWORD'),
         database: configService.get('POSTGRES_DB'),
         schema: configService.get('POSTGRES_SCHEMA'),
-        migrations: [initialDatabase1673104526515],
+        migrations: ['dist/src/migrations/*.js'],
         autoLoadEntities: true,
+        namingStrategy: new DatabaseNamingStrategy(),
       }),
     }),
     ProjectsModule,
