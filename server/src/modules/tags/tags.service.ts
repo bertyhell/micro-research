@@ -7,6 +7,6 @@ export class TagsService {
   constructor(private dataSource: DataSource) {}
 
   async findAll(): Promise<Tag[]> {
-    return this.dataSource.getRepository(Tag).find({});
+    return this.dataSource.getRepository(Tag).find();
   }
 }

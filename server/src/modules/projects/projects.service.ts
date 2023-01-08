@@ -91,9 +91,9 @@ export class ProjectsService {
     const projectRows = await this.dataSource
       .getRepository(Project)
       .createQueryBuilder('project')
-      .select('project.id')
-      .select('project.title')
-      .select('tagLink.count')
+      .select('project.id', 'id')
+      .addSelect('project.title', 'title')
+      .addSelect('tagLink.count', 'count')
       .leftJoin('project.tagLinks', 'tagLink', 'project.id = tagLink.projectId')
       .leftJoin('tagLink.tag', 'tag', 'tagLink.tagId = tag.id')
       .where('lower(tag.title) = lower(:tag)', { tag })
@@ -116,9 +116,9 @@ export class ProjectsService {
     const projectRows = await this.dataSource
       .getRepository(Project)
       .createQueryBuilder('project')
-      .select('project.id')
-      .select('project.title')
-      .select('SUM(response.count)', 'count')
+      .select('project.id', 'id')
+      .addSelect('project.title', 'title')
+      .addSelect('SUM(response.count)', 'count')
       .leftJoin(
         'project.responses',
         'response',
