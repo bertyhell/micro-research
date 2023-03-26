@@ -31,5 +31,7 @@ RUN npm ci --omit=dev && npm cache clean --force
 
 EXPOSE 8080
 
+RUN npm run typeorm:run-migrations
+
 # Start the server using the production build
 CMD [ "npm", "run", "start:prod" ]
