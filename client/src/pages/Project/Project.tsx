@@ -45,44 +45,44 @@ function Project() {
   };
 
   const getChartData = (project: ProjectDetailResponse): BarChartProps => {
-    return {
-      xLabels: [
-        "Less then once a week",
-        "Once a week",
-        "Twice a week",
-        "Three times a week",
-        "Four times a week",
-        "Five times a week",
-        "Six times a week",
-        "Everyday",
-        "More than once a day",
-      ],
-      yLabels: ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
-      data: [
-        [9000, 800, 700, 600, 500, 400, 300, 200, 100],
-        [9000, 800, 700, 600, 500, 400, 300, 200, 100],
-        [9000, 800, 700, 600, 500, 400, 300, 200, 100],
-        [9000, 800, 700, 600, 500, 400, 300, 200, 100],
-        [9000, 800, 700, 600, 500, 400, 300, 200, 100],
-        [9000, 800, 700, 600, 500, 400, 300, 200, 100],
-        [9000, 800, 700, 600, 500, 400, 300, 200, 100],
-        [9000, 800, 700, 600, 500, 400, 300, 200, 100],
-        [9000, 800, 700, 600, 500, 400, 300, 200, 100],
-      ],
-    };
     // return {
-    //   xLabels: project.questions[0].answers.map(
-    //     (firstAnswer) => firstAnswer.title
-    //   ),
-    //   yLabels: project.questions[1].answers.map(
-    //     (secondAnswer) => secondAnswer.title
-    //   ),
-    //   data: project.questions[0].answers.map((firstAnswer) => {
-    //     return project.questions[1].answers.map((secondAnswer) => {
-    //       return getCount(project.responses, firstAnswer.id, secondAnswer.id);
-    //     });
-    //   }),
+    //   xLabels: [
+    //     "Less then once a week",
+    //     "Once a week",
+    //     "Twice a week",
+    //     "Three times a week",
+    //     "Four times a week",
+    //     "Five times a week",
+    //     "Six times a week",
+    //     "Everyday",
+    //     "More than once a day",
+    //   ],
+    //   yLabels: ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
+    //   data: [
+    //     [9000, 800, 700, 600, 500, 400, 300, 200, 100],
+    //     [9000, 800, 700, 600, 500, 400, 300, 200, 100],
+    //     [9000, 800, 700, 600, 500, 400, 300, 200, 100],
+    //     [9000, 800, 700, 600, 500, 400, 300, 200, 100],
+    //     [9000, 800, 700, 600, 500, 400, 300, 200, 100],
+    //     [9000, 800, 700, 600, 500, 400, 300, 200, 100],
+    //     [9000, 800, 700, 600, 500, 400, 300, 200, 100],
+    //     [9000, 800, 700, 600, 500, 400, 300, 200, 100],
+    //     [9000, 800, 700, 600, 500, 400, 300, 200, 100],
+    //   ],
     // };
+    return {
+      xLabels: project.questions[0].answers.map(
+        (firstAnswer) => firstAnswer.title
+      ),
+      yLabels: project.questions[1].answers.map(
+        (secondAnswer) => secondAnswer.title
+      ),
+      data: project.questions[0].answers.map((firstAnswer) => {
+        return project.questions[1].answers.map((secondAnswer) => {
+          return getCount(project.responses, firstAnswer.id, secondAnswer.id);
+        });
+      }),
+    };
   };
 
   const incrementTag = async (tagId: string) => {

@@ -72,12 +72,9 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 
 Nest is [MIT licensed](LICENSE).
 
-## Deploy on android
-* install termux
-* install debian: https://github.com/sp4rkie/debian-on-termux
-* copy files to device. eg: /storage/emulate/0/Android/data/com.termux/files
-    * dist folder, .env, prisma folder
-* then use the termux command line to copy those files to the termux storage:
-* cp -r /storage/emulate/0/Android/data/com.termux/files/. $HOME/micro-research/
-* generate the database client: npx prisma generate
-* start the server: npm run start:prod
+## Typeorm migrations:
+
+create a migration
+```bash
+npm run typeorm:generate-migration --name=InitialDatabaseSetup
+```

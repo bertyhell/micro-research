@@ -1,0 +1,66 @@
+[
+  {
+    "id": "67359ca7-dc93-4f74-b779-1ccf43196bc0",
+    "projectId": "e3beb442-e0e9-455d-a810-f09994d9a637",
+    "tagId": "453eada3-fa7a-47b9-b64c-ea5c4f9ac78c",
+    "count": 6,
+    "createdAt": "2022-12-29 00:25:46.998",
+    "updatedAt": "2022-12-29 00:35:49.689"
+  },
+  {
+    "id": "57da72c3-13c4-4abe-a030-3d4405c76524",
+    "projectId": "e3beb442-e0e9-455d-a810-f09994d9a637",
+    "tagId": "9173e47b-88a3-46bd-975a-e8bb617ffd4a",
+    "count": 4,
+    "createdAt": "2022-12-29 00:35:50.365",
+    "updatedAt": "2022-12-29 00:35:52.456"
+  },
+  {
+    "id": "1323ff80-e3cc-4aca-b42d-62eb4db5369f",
+    "projectId": "fcb088a6-95b0-45f2-9c17-bc05e976ad11",
+    "tagId": "453eada3-fa7a-47b9-b64c-ea5c4f9ac78c",
+    "count": 1,
+    "createdAt": "2022-12-29 14:01:53.577",
+    "updatedAt": "2022-12-29 14:01:53.577"
+  },
+  {
+    "id": "e542cfb4-d029-4747-ba21-1024950ef926",
+    "projectId": "fcb088a6-95b0-45f2-9c17-bc05e976ad11",
+    "tagId": "8df4a96e-1d3d-4a99-addd-30aee3b24689",
+    "count": 1,
+    "createdAt": "2022-12-29 14:01:54.800",
+    "updatedAt": "2022-12-29 14:01:54.800"
+  },
+  {
+    "id": "80ed21ba-7f4a-4be1-b4f5-7e447c81659a",
+    "projectId": "be99595e-1c9b-4006-9cb2-e787e53081a3",
+    "tagId": "9173e47b-88a3-46bd-975a-e8bb617ffd4a",
+    "count": 1,
+    "createdAt": "2022-12-29 14:12:08.926",
+    "updatedAt": "2022-12-29 14:12:08.926"
+  },
+  {
+    "id": "9746318a-e89d-4095-9020-ab3b7da57ca8",
+    "projectId": "be99595e-1c9b-4006-9cb2-e787e53081a3",
+    "tagId": "453eada3-fa7a-47b9-b64c-ea5c4f9ac78c",
+    "count": 1,
+    "createdAt": "2022-12-29 14:12:10.869",
+    "updatedAt": "2022-12-29 14:12:10.869"
+  },
+  {
+    "id": "b6ce1dbf-54d4-45a2-be9a-d82a565d7799",
+    "projectId": "e3beb442-e0e9-455d-a810-f09994d9a637",
+    "tagId": "8df4a96e-1d3d-4a99-addd-30aee3b24689",
+    "count": 16,
+    "createdAt": "2022-12-25 22:41:57.000",
+    "updatedAt": "2022-12-29 20:13:31.735"
+  },
+  {
+    "id": "8067adc7-dc7e-4e05-a9cd-a833bc913cfa",
+    "projectId": "c8f0c309-dcdc-48ea-b2ba-52d3f4da3ccc",
+    "tagId": "453eada3-fa7a-47b9-b64c-ea5c4f9ac78c",
+    "count": 1,
+    "createdAt": "2022-12-31 15:01:06.928",
+    "updatedAt": "2022-12-31 15:01:06.928"
+  }
+]

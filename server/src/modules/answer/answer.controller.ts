@@ -10,11 +10,11 @@ import {
 } from '@nestjs/common';
 import { AnswerService } from './answer.service';
 import {
-  ProjectResponse,
-  QuestionResponse,
-  AnswerResponse,
-  AnswerProjectResponse,
-} from './dto/ProjectResponse';
+  ProjectDto,
+  QuestionDto,
+  AnswerDto,
+  AnswerProjectDto,
+} from './dto/ProjectDto';
 
 @ApiTags('answer')
 @Controller('answer')
@@ -25,7 +25,7 @@ export class AnswerController {
   @ApiResponse({
     status: 200,
     description: '1 unanswered project with their questions and answer options',
-    type: ProjectResponse,
+    type: ProjectDto,
   })
   @Get()
   async findUnanswered(
@@ -35,7 +35,7 @@ export class AnswerController {
       new ParseArrayPipe({ optional: true }),
     )
     answeredIds: string[],
-  ): Promise<ProjectResponse> {
+  ): Promise<ProjectDto> {
     const project = await this.answerService.findUnanswered(
       answeredIds.filter((id) => !!id),
     );
@@ -52,11 +52,11 @@ export class AnswerController {
       title: project.title,
       id: project.id,
       questions: project.questions.map(
-        (question): QuestionResponse => ({
+        (question): QuestionDto => ({
           id: question.id,
           title: question.title,
           answers: question.answers.map(
-            (answer): AnswerResponse => ({
+            (answer): AnswerDto => ({
               title: answer.title,
               id: answer.id,
               order: answer.order,
@@ -71,14 +71,14 @@ export class AnswerController {
   @ApiResponse({
     status: 200,
     description: 'success message',
-    type: AnswerProjectResponse,
+    type: AnswerProjectDto,
   })
   @Post()
   async submitAnswerToProject(
     @Query('projectId') projectId: string,
     @Query('firstAnswerId') firstAnswerId: string,
     @Query('secondAnswerId') secondAnswerId: string,
-  ): Promise<AnswerProjectResponse> {
+  ): Promise<AnswerProjectDto> {
     await this.answerService.incrementResponseCount(
       projectId,
       firstAnswerId,

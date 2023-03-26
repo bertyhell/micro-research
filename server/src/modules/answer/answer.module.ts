@@ -1,10 +1,12 @@
 import { Module } from '@nestjs/common';
 import { AnswerService } from './answer.service';
 import { AnswerController } from './answer.controller';
-import { DatabaseModule } from '../database/database.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Project } from '../../entities/project.entity';
+import { ProjectResponse } from '../../entities/project-response.entity';
 
 @Module({
-  imports: [DatabaseModule],
+  imports: [TypeOrmModule.forFeature([Project, ProjectResponse])],
   controllers: [AnswerController],
   providers: [AnswerService],
 })

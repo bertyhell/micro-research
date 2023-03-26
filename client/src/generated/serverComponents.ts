@@ -18,7 +18,7 @@ export const fetchAppControllerStatus = (
   signal?: AbortSignal
 ) =>
   serverFetch<undefined, AppControllerStatusError, undefined, {}, {}, {}>({
-    url: "/",
+    url: "/api/status",
     method: "get",
     ...variables,
     signal,
@@ -34,7 +34,11 @@ export const useAppControllerStatus = <TData = undefined>(
   const { fetcherOptions, queryOptions, queryKeyFn } =
     useServerContext(options);
   return reactQuery.useQuery<undefined, AppControllerStatusError, TData>(
-    queryKeyFn({ path: "/", operationId: "appControllerStatus", variables }),
+    queryKeyFn({
+      path: "/api/status",
+      operationId: "appControllerStatus",
+      variables,
+    }),
     ({ signal }) =>
       fetchAppControllerStatus({ ...fetcherOptions, ...variables }, signal),
     {
@@ -64,7 +68,7 @@ export const fetchProjectsControllerCreate = (
     {},
     {},
     {}
-  >({ url: "/projects", method: "post", ...variables, signal });
+  >({ url: "/api/projects", method: "post", ...variables, signal });
 
 /**
  * Create a new project with 2 questions and their answers
@@ -118,7 +122,7 @@ export const fetchProjectsControllerGetByTag = (
     {},
     {},
     ProjectsControllerGetByTagPathParams
-  >({ url: "/projects/tags/{tag}", method: "get", ...variables, signal });
+  >({ url: "/api/projects/tags/{tag}", method: "get", ...variables, signal });
 
 /**
  * Get project by tag count
@@ -144,7 +148,7 @@ export const useProjectsControllerGetByTag = <
     TData
   >(
     queryKeyFn({
-      path: "/projects/tags/{tag}",
+      path: "/api/projects/tags/{tag}",
       operationId: "projectsControllerGetByTag",
       variables,
     }),
@@ -190,7 +194,7 @@ export const fetchProjectsControllerIncrementTagCount = (
     {},
     ProjectsControllerIncrementTagCountPathParams
   >({
-    url: "/projects/{projectId}/tags/{tagId}",
+    url: "/api/projects/{projectId}/tags/{tagId}",
     method: "patch",
     ...variables,
     signal,
@@ -247,7 +251,7 @@ export const fetchProjectsControllerGetByAnswerCount = (
     {},
     {},
     {}
-  >({ url: "/projects/answers", method: "get", ...variables, signal });
+  >({ url: "/api/projects/answers", method: "get", ...variables, signal });
 
 /**
  * Get project by tag count
@@ -273,7 +277,7 @@ export const useProjectsControllerGetByAnswerCount = <
     TData
   >(
     queryKeyFn({
-      path: "/projects/answers",
+      path: "/api/projects/answers",
       operationId: "projectsControllerGetByAnswerCount",
       variables,
     }),
@@ -313,7 +317,7 @@ export const fetchProjectsControllerFindOne = (
     {},
     {},
     ProjectsControllerFindOnePathParams
-  >({ url: "/projects/{id}", method: "get", ...variables, signal });
+  >({ url: "/api/projects/{id}", method: "get", ...variables, signal });
 
 /**
  * Get one project by id
@@ -339,7 +343,7 @@ export const useProjectsControllerFindOne = <
     TData
   >(
     queryKeyFn({
-      path: "/projects/{id}",
+      path: "/api/projects/{id}",
       operationId: "projectsControllerFindOne",
       variables,
     }),
@@ -374,24 +378,22 @@ export const fetchAnswerControllerFindUnanswered = (
   signal?: AbortSignal
 ) =>
   serverFetch<
-    Schemas.ProjectResponse,
+    Schemas.ProjectDto,
     AnswerControllerFindUnansweredError,
     undefined,
     {},
     AnswerControllerFindUnansweredQueryParams,
     {}
-  >({ url: "/answer", method: "get", ...variables, signal });
+  >({ url: "/api/answer", method: "get", ...variables, signal });
 
 /**
  * Get unanswered questions
  */
-export const useAnswerControllerFindUnanswered = <
-  TData = Schemas.ProjectResponse
->(
+export const useAnswerControllerFindUnanswered = <TData = Schemas.ProjectDto>(
   variables: AnswerControllerFindUnansweredVariables,
   options?: Omit<
     reactQuery.UseQueryOptions<
-      Schemas.ProjectResponse,
+      Schemas.ProjectDto,
       AnswerControllerFindUnansweredError,
       TData
     >,
@@ -401,12 +403,12 @@ export const useAnswerControllerFindUnanswered = <
   const { fetcherOptions, queryOptions, queryKeyFn } =
     useServerContext(options);
   return reactQuery.useQuery<
-    Schemas.ProjectResponse,
+    Schemas.ProjectDto,
     AnswerControllerFindUnansweredError,
     TData
   >(
     queryKeyFn({
-      path: "/answer",
+      path: "/api/answer",
       operationId: "answerControllerFindUnanswered",
       variables,
     }),
@@ -443,13 +445,13 @@ export const fetchAnswerControllerSubmitAnswerToProject = (
   signal?: AbortSignal
 ) =>
   serverFetch<
-    Schemas.AnswerProjectResponse,
+    Schemas.AnswerProjectDto,
     AnswerControllerSubmitAnswerToProjectError,
     undefined,
     {},
     AnswerControllerSubmitAnswerToProjectQueryParams,
     {}
-  >({ url: "/answer", method: "post", ...variables, signal });
+  >({ url: "/api/answer", method: "post", ...variables, signal });
 
 /**
  * Enter a response for a project
@@ -457,7 +459,7 @@ export const fetchAnswerControllerSubmitAnswerToProject = (
 export const useAnswerControllerSubmitAnswerToProject = (
   options?: Omit<
     reactQuery.UseMutationOptions<
-      Schemas.AnswerProjectResponse,
+      Schemas.AnswerProjectDto,
       AnswerControllerSubmitAnswerToProjectError,
       AnswerControllerSubmitAnswerToProjectVariables
     >,
@@ -466,7 +468,7 @@ export const useAnswerControllerSubmitAnswerToProject = (
 ) => {
   const { fetcherOptions } = useServerContext();
   return reactQuery.useMutation<
-    Schemas.AnswerProjectResponse,
+    Schemas.AnswerProjectDto,
     AnswerControllerSubmitAnswerToProjectError,
     AnswerControllerSubmitAnswerToProjectVariables
   >(
@@ -499,7 +501,7 @@ export const fetchTagsControllerFindAll = (
     {},
     {},
     {}
-  >({ url: "/tags", method: "get", ...variables, signal });
+  >({ url: "/api/tags", method: "get", ...variables, signal });
 
 /**
  * Get all tags
@@ -523,7 +525,7 @@ export const useTagsControllerFindAll = <TData = TagsControllerFindAllResponse>(
     TData
   >(
     queryKeyFn({
-      path: "/tags",
+      path: "/api/tags",
       operationId: "tagsControllerFindAll",
       variables,
     }),
@@ -536,34 +538,75 @@ export const useTagsControllerFindAll = <TData = TagsControllerFindAllResponse>(
   );
 };
 
+export type SeedControllerCreateError = Fetcher.ErrorWrapper<undefined>;
+
+export type SeedControllerCreateVariables = {
+  body?: Schemas.CreateSeedDto;
+} & ServerContext["fetcherOptions"];
+
+export const fetchSeedControllerCreate = (
+  variables: SeedControllerCreateVariables,
+  signal?: AbortSignal
+) =>
+  serverFetch<
+    undefined,
+    SeedControllerCreateError,
+    Schemas.CreateSeedDto,
+    {},
+    {},
+    {}
+  >({ url: "/api/seed", method: "post", ...variables, signal });
+
+export const useSeedControllerCreate = (
+  options?: Omit<
+    reactQuery.UseMutationOptions<
+      undefined,
+      SeedControllerCreateError,
+      SeedControllerCreateVariables
+    >,
+    "mutationFn"
+  >
+) => {
+  const { fetcherOptions } = useServerContext();
+  return reactQuery.useMutation<
+    undefined,
+    SeedControllerCreateError,
+    SeedControllerCreateVariables
+  >(
+    (variables: SeedControllerCreateVariables) =>
+      fetchSeedControllerCreate({ ...fetcherOptions, ...variables }),
+    options
+  );
+};
+
 export type QueryOperation =
   | {
-      path: "/";
+      path: "/api/status";
       operationId: "appControllerStatus";
       variables: AppControllerStatusVariables;
     }
   | {
-      path: "/projects/tags/{tag}";
+      path: "/api/projects/tags/{tag}";
       operationId: "projectsControllerGetByTag";
       variables: ProjectsControllerGetByTagVariables;
     }
   | {
-      path: "/projects/answers";
+      path: "/api/projects/answers";
       operationId: "projectsControllerGetByAnswerCount";
       variables: ProjectsControllerGetByAnswerCountVariables;
     }
   | {
-      path: "/projects/{id}";
+      path: "/api/projects/{id}";
       operationId: "projectsControllerFindOne";
       variables: ProjectsControllerFindOneVariables;
     }
   | {
-      path: "/answer";
+      path: "/api/answer";
       operationId: "answerControllerFindUnanswered";
       variables: AnswerControllerFindUnansweredVariables;
     }
   | {
-      path: "/tags";
+      path: "/api/tags";
       operationId: "tagsControllerFindAll";
       variables: TagsControllerFindAllVariables;
     };

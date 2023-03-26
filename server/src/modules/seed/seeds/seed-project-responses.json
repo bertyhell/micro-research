@@ -1,0 +1,44 @@
+[
+  {
+    "projectId": "e3beb442-e0e9-455d-a810-f09994d9a637",
+    "firstAnswerId": "d9f0776b-42d7-4cc7-b850-5bcce8ff46c9",
+    "secondAnswerId": "50bea811-2229-4c83-905c-d5fa801beb59",
+    "count": 5
+  },
+  {
+    "projectId": "e3beb442-e0e9-455d-a810-f09994d9a637",
+    "firstAnswerId": "d9f0776b-42d7-4cc7-b850-5bcce8ff46c9",
+    "secondAnswerId": "a35825ce-68d7-492a-8fee-29a2472e9e38",
+    "count": 2
+  },
+  {
+    "projectId": "e3beb442-e0e9-455d-a810-f09994d9a637",
+    "firstAnswerId": "06de4995-540f-4402-a106-c542aca67797",
+    "secondAnswerId": "50bea811-2229-4c83-905c-d5fa801beb59",
+    "count": 8
+  },
+  {
+    "projectId": "e3beb442-e0e9-455d-a810-f09994d9a637",
+    "firstAnswerId": "06de4995-540f-4402-a106-c542aca67797",
+    "secondAnswerId": "a35825ce-68d7-492a-8fee-29a2472e9e38",
+    "count": 4
+  },
+  {
+    "projectId": "c6983c00-bc09-4e9f-9276-2acd03c9990c",
+    "firstAnswerId": "24162420-3de3-4f69-93cf-ea1c4ffebcaf",
+    "secondAnswerId": "7291f5eb-5958-478e-81cc-f131ed9a53e3",
+    "count": 1
+  },
+  {
+    "projectId": "be99595e-1c9b-4006-9cb2-e787e53081a3",
+    "firstAnswerId": "6a2e0636-d51a-4bc3-842f-d1a695c08962",
+    "secondAnswerId": "08d9f97a-707e-489d-9296-d8f87a4b5c66",
+    "count": 1
+  },
+  {
+    "projectId": "c8f0c309-dcdc-48ea-b2ba-52d3f4da3ccc",
+    "firstAnswerId": "7e9ee7fd-79f1-4c98-95bf-6d00bd5a88f7",
+    "secondAnswerId": "f8e67a2f-9d0c-41f3-aa1b-e2aff62b4558",
+    "count": 1
+  }
+]
