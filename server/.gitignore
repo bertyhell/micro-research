@@ -36,3 +36,6 @@ lerna-debug.log*
 
 .env*
 !.env.example
+
+client-dist/*
+!client-dist/.gitkeep
