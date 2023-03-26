@@ -22,7 +22,7 @@ import { Throttle } from '@nestjs/throttler';
 export class ProjectsController {
   constructor(private readonly projectsService: ProjectsService) {}
 
-  @Throttle(1, 120)
+  // @Throttle(1, 120)
   @ApiOperation({
     description: 'Create a new project with 2 questions and their answers',
   })

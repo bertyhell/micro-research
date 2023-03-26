@@ -26,11 +26,11 @@ export class ProjectsService {
         const questionResponses = await Promise.all([
           entityManager.getRepository(Question).insert({
             title: createProjectDto.questions[0].title,
-            projectId: projectResponse.raw.id,
+            projectId: projectResponse.identifiers[0].id,
           }),
           entityManager.getRepository(Question).insert({
             title: createProjectDto.questions[1].title,
-            projectId: projectResponse.raw.id,
+            projectId: projectResponse.identifiers[0].id,
           }),
         ]);
 
@@ -44,14 +44,14 @@ export class ProjectsService {
               (answer, index): Partial<Answer> => ({
                 title: answer,
                 order: index,
-                questionId: questionResponses[0].raw.id,
+                questionId: questionResponses[0].identifiers[0].id,
               }),
             ),
             ...createProjectDto.questions[1].answers.map(
               (answer, index): Partial<Answer> => ({
                 title: answer,
                 order: index,
-                questionId: questionResponses[0].raw.id,
+                questionId: questionResponses[0].identifiers[0].id,
               }),
             ),
           ])
