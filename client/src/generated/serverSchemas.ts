@@ -77,4 +77,10 @@ export type AnswerProjectDto = {
   message: string;
 };
 
-export type CreateSeedDto = {};
+export type SeedBodyDto = {
+  apiKey: string;
+};
+
+export type SeedResponseDto = {
+  message: string;
+};

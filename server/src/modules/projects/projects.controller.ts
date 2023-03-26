@@ -40,7 +40,7 @@ export class ProjectsController {
   @ApiOperation({ description: 'Get project by tag count' })
   @ApiResponse({
     status: 200,
-    description: 'List of projects by tags count, paginated',
+    description: 'Get project by tag count',
     type: ProjectRankedResponse,
     isArray: true,
   })
@@ -61,7 +61,7 @@ export class ProjectsController {
   @ApiOperation({ description: 'Increment tag count by 1 for project' })
   @ApiResponse({
     status: 200,
-    description: 'List of projects by tags count, paginated',
+    description: 'Increment tag count by 1 for project',
     type: ProjectRankedResponse,
     isArray: true,
   })

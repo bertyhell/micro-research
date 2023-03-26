@@ -9,7 +9,7 @@ export default defineConfig({
 
     from: {
       source: "url",
-      url: "http://localhost:3000/docs-yaml",
+      url: "http://localhost:8080/api/docs-yaml",
     },
     outputDir: "./src/generated",
     to: async (context) => {

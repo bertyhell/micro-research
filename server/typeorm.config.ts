@@ -24,4 +24,5 @@ export default new DataSource({
   entities: [Answer, Project, ProjectResponse, Question, Tag, TagLink],
   migrations: ['dist/src/migrations/*.js'],
   namingStrategy: new DatabaseNamingStrategy(),
+  migrationsRun: true,
 });

@@ -538,43 +538,49 @@ export const useTagsControllerFindAll = <TData = TagsControllerFindAllResponse>(
   );
 };
 
-export type SeedControllerCreateError = Fetcher.ErrorWrapper<undefined>;
+export type SeedControllerSeedError = Fetcher.ErrorWrapper<undefined>;
 
-export type SeedControllerCreateVariables = {
-  body?: Schemas.CreateSeedDto;
+export type SeedControllerSeedVariables = {
+  body: Schemas.SeedBodyDto;
 } & ServerContext["fetcherOptions"];
 
-export const fetchSeedControllerCreate = (
-  variables: SeedControllerCreateVariables,
+/**
+ * Put initial data into the database
+ */
+export const fetchSeedControllerSeed = (
+  variables: SeedControllerSeedVariables,
   signal?: AbortSignal
 ) =>
   serverFetch<
-    undefined,
-    SeedControllerCreateError,
-    Schemas.CreateSeedDto,
+    Schemas.SeedResponseDto,
+    SeedControllerSeedError,
+    Schemas.SeedBodyDto,
     {},
     {},
     {}
   >({ url: "/api/seed", method: "post", ...variables, signal });
 
-export const useSeedControllerCreate = (
+/**
+ * Put initial data into the database
+ */
+export const useSeedControllerSeed = (
   options?: Omit<
     reactQuery.UseMutationOptions<
-      undefined,
-      SeedControllerCreateError,
-      SeedControllerCreateVariables
+      Schemas.SeedResponseDto,
+      SeedControllerSeedError,
+      SeedControllerSeedVariables
     >,
     "mutationFn"
   >
 ) => {
   const { fetcherOptions } = useServerContext();
   return reactQuery.useMutation<
-    undefined,
-    SeedControllerCreateError,
-    SeedControllerCreateVariables
+    Schemas.SeedResponseDto,
+    SeedControllerSeedError,
+    SeedControllerSeedVariables
   >(
-    (variables: SeedControllerCreateVariables) =>
-      fetchSeedControllerCreate({ ...fetcherOptions, ...variables }),
+    (variables: SeedControllerSeedVariables) =>
+      fetchSeedControllerSeed({ ...fetcherOptions, ...variables }),
     options
   );
 };

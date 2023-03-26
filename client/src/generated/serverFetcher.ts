@@ -1,7 +1,7 @@
 import { ServerContext } from "./serverContext";
 
 const baseUrl = "https://micro-research-nodejs.fly.dev";
-// const baseUrl = "http://localhost:3000";
+// const baseUrl = "http://localhost:8080";
 
 export type ErrorWrapper<TError> =
   | TError
