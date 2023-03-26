@@ -16,7 +16,7 @@ import { DatabaseNamingStrategy } from './modules/helpers/database-naming-strate
   imports: [
     ConfigModule.forRoot(),
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '../../../client/dist'),
+      rootPath: join(__dirname, '../../client-dist'),
     }),
     ThrottlerModule.forRoot({
       ttl: 60,
