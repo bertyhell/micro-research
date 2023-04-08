@@ -14,8 +14,7 @@ For instance one research project could be:
     * WiFi FTP Server
 * Open termux and install postgresql
   * [./README-INSTALL-POSTGRES.md](./README-INSTALL-POSTGRES.md)
-  * create the postgres schema for the application: `CREATE SCHEMA app;`
-  * exit the postgres prompt: `exit`
+  * exit the postgres prompt: `\q`
 
 ### Update existing code with new version
 

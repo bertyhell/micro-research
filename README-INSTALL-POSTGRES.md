@@ -53,22 +53,39 @@ Let’s first get a list of databases that comes with the installation on the se
 ```
 psql -l
 ```
+
 To create your own database, simply enter the command:
 
 ```
-createdb mydb
+psal -d postgres
+create database microresearch;
+create user microresearchadmin with encrypted password 'microresearchadmin';
+grant all privileges on database microresearch to microresearchadmin;
 ```
 “mydb” is the name I chose for my database.
 
 To connect it, I’ll type:
 ```
-psql mydb
+psql micro-research
 ```
 If the command executes successfully, it will show the prompt:
 
 ```
-mydb=#
+micro-research=#
 ```
-From here, you can now start switching/creating databases and executing as many sql queries as you want.
 
-I hope you learnt a lot from this post. If you’re facing any issue, kindly post it in the comment box below.
+Create the database, user and schema
+```
+sudo -u postgres psql
+
+
+CREATE USER postgres WITH SUPERUSER WITH PASSWORD 'postgres';
+GRANT ALL PRIVILEGES ON DATABASE "micro-research" TO postgres;
+psql -h localhost -p 5432 -d micro-research -U postgres
+ALTER USER postgres WITH SUPERUSER;
+GRANT CREATE ON DATABASE "micro-research" TO postgres;
+CREATE SCHEMA app;
+ALTER SCHEMA app OWNER TO postgres;
+
+
+```
